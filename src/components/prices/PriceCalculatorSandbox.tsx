@@ -47,9 +47,9 @@ export const PriceCalculatorSandbox: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-6 sm:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-4 sm:p-6 md:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm space-y-4">
         <div className="max-w-3xl space-y-1.5">
           <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
             Methodology & Econometric Verification

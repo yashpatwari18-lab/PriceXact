@@ -79,9 +79,9 @@ export const PriceForecastPage: React.FC<PriceForecastPageProps> = ({
   }, [historicalSequence, selectedCrop, selectedMarket, forecastDays]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Top Banner */}
-      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-6 sm:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-4 sm:p-6 md:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider mb-1">
             Econometric Linear Regression
@@ -101,7 +101,7 @@ export const PriceForecastPage: React.FC<PriceForecastPageProps> = ({
       </div>
 
       {/* Control Filters */}
-      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-4 sm:p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div>
             <label className="block text-[11px] font-semibold text-stone-500 uppercase mb-1">

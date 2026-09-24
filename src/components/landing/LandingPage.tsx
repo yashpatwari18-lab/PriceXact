@@ -88,12 +88,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="pb-16 sm:pb-24 w-full max-w-full overflow-x-hidden">
+    <div className="pb-8 sm:pb-16 w-full max-w-full overflow-x-hidden">
       {/* 1. Live APMC Mandi Commodities Ticker Strip */}
       <div className="w-full max-w-full bg-stone-50/90 dark:bg-[#111714] text-stone-700 dark:text-stone-300 border-b border-stone-200/80 dark:border-stone-800/80 overflow-hidden py-2 text-xs select-none transition-colors">
         <div className="flex animate-ticker whitespace-nowrap">
           {[...tickerItems, ...tickerItems].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center gap-2 px-6 border-r border-stone-200/80 dark:border-stone-800/80">
+            <div key={idx} className="inline-flex items-center gap-2 px-4 sm:px-6 border-r border-stone-200/80 dark:border-stone-800/80">
               <span className="font-semibold text-stone-800 dark:text-stone-200">{item.name}</span>
               <span className="text-[11px] text-stone-400 dark:text-stone-500 font-mono">[{item.mandi}]</span>
               <span className="font-mono font-medium text-stone-900 dark:text-stone-100 tabular-nums">{item.price}</span>
@@ -106,12 +106,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </div>
 
-      <div className="space-y-16 sm:space-y-24 pt-4 sm:pt-8">
+      <div className="space-y-12 sm:space-y-20 pt-3 sm:pt-6">
         {/* 2. Hero Section: Editorial Elegance & Commodities Terminal */}
-        <section className="relative px-4 sm:px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        <section className="relative px-3 sm:px-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           {/* Left Hero Narrative */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#143828] dark:text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-[#143828] dark:bg-emerald-400" />
               <span>National Agricultural Clearinghouse & Price Intelligence</span>
@@ -177,7 +177,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Right Hero: Bloomberg-Style High-Precision Commodity Terminal */}
           <div className="lg:col-span-5">
-            <div className="bg-white dark:bg-[#141A17] rounded-2xl p-6 border border-stone-200/90 dark:border-stone-800 shadow-md space-y-5">
+            <div className="bg-white dark:bg-[#141A17] rounded-2xl p-4 sm:p-6 border border-stone-200/90 dark:border-stone-800 shadow-md space-y-4 sm:space-y-5">
               {/* Terminal Header */}
               <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
                 <div className="flex items-center gap-2">
@@ -199,7 +199,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <button
                       key={crop.id}
                       onClick={() => setHeroCropId(crop.id)}
-                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
+                      className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
                         isSelected
                           ? 'bg-white dark:bg-[#1C2520] text-stone-900 dark:text-white shadow-2xs font-semibold'
                           : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
@@ -215,7 +215,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="space-y-4 pt-1">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-white">
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-stone-900 dark:text-white">
                       {selectedHeroCrop.name}
                     </h3>
                     <div className="text-[11px] text-stone-500">
@@ -227,31 +227,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <span className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold block">
                       Net Intermediary Spread
                     </span>
-                    <span className="font-mono text-xl font-bold text-amber-600 dark:text-amber-400 tabular-nums">
+                    <span className="font-mono text-lg sm:text-xl font-bold text-amber-600 dark:text-amber-400 tabular-nums">
                       +₹{heroStats.spread}/kg
                     </span>
                   </div>
                 </div>
 
                 {/* 3 Metric Columns */}
-                <div className="grid grid-cols-3 gap-3 p-3.5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/60 font-mono text-center">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-3 p-2.5 sm:p-3.5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/60 font-mono text-center">
                   <div>
-                    <span className="text-[10px] text-stone-500 font-sans block mb-0.5">Farmgate (Producer)</span>
-                    <span className="text-base sm:text-lg font-bold text-[#143828] dark:text-emerald-400 tabular-nums">
+                    <span className="text-[9px] sm:text-[10px] text-stone-500 font-sans block mb-0.5">Farmgate (Producer)</span>
+                    <span className="text-sm sm:text-lg font-bold text-[#143828] dark:text-emerald-400 tabular-nums">
                       ₹{heroStats.farmgate}
                     </span>
                   </div>
 
                   <div className="border-x border-stone-200 dark:border-stone-700">
-                    <span className="text-[10px] text-stone-500 font-sans block mb-0.5">APMC Mandi</span>
-                    <span className="text-base sm:text-lg font-bold text-stone-700 dark:text-stone-300 tabular-nums">
+                    <span className="text-[9px] sm:text-[10px] text-stone-500 font-sans block mb-0.5">APMC Mandi</span>
+                    <span className="text-sm sm:text-lg font-bold text-stone-700 dark:text-stone-300 tabular-nums">
                       ₹{heroStats.wholesale}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-stone-500 font-sans block mb-0.5">Retail Consumer</span>
-                    <span className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100 tabular-nums">
+                    <span className="text-[9px] sm:text-[10px] text-stone-500 font-sans block mb-0.5">Retail Consumer</span>
+                    <span className="text-sm sm:text-lg font-bold text-stone-900 dark:text-stone-100 tabular-nums">
                       ₹{heroStats.retail}
                     </span>
                   </div>
@@ -303,25 +303,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 3. Role Portals Architecture: Producer vs Consumer */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="border border-stone-200/80 dark:border-stone-800 rounded-2xl bg-white dark:bg-[#141A17] p-8 sm:p-12 shadow-xs space-y-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6">
+        <div className="border border-stone-200/80 dark:border-stone-800 rounded-2xl bg-white dark:bg-[#141A17] p-5 sm:p-8 md:p-12 shadow-xs space-y-6 sm:space-y-8">
           <div className="max-w-2xl space-y-2">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
               Ecosystem Onboarding
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-white tracking-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-stone-900 dark:text-white tracking-tight">
               Tailored workspaces for producers and consumers
             </h2>
-            <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
               PriceXact serves distinct participants in the agricultural value chain with dedicated verification protocols and purpose-built market tooling.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 pt-2">
             {/* Farmer Portal Card */}
             <div
               onClick={() => onSelectRole('farmer')}
-              className="border border-stone-200 dark:border-stone-800 rounded-xl p-8 hover:border-[#143828] dark:hover:border-emerald-600 cursor-pointer transition-all bg-stone-50/50 dark:bg-stone-800/20 flex flex-col justify-between space-y-6 group"
+              className="border border-stone-200 dark:border-stone-800 rounded-xl p-5 sm:p-6 md:p-8 hover:border-[#143828] dark:hover:border-emerald-600 cursor-pointer transition-all bg-stone-50/50 dark:bg-stone-800/20 flex flex-col justify-between space-y-5 sm:space-y-6 group"
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-xl bg-[#143828] text-emerald-400 flex items-center justify-center font-serif text-2xl font-bold shadow-xs">
@@ -329,7 +329,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white">
+                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-stone-900 dark:text-white">
                     Agricultural Producers (Farmers)
                   </h3>
                   <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
@@ -366,7 +366,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Consumer Portal Card */}
             <div
               onClick={() => onSelectRole('consumer')}
-              className="border border-stone-200 dark:border-stone-800 rounded-xl p-8 hover:border-amber-600 dark:hover:border-amber-500 cursor-pointer transition-all bg-stone-50/50 dark:bg-stone-800/20 flex flex-col justify-between space-y-6 group"
+              className="border border-stone-200 dark:border-stone-800 rounded-xl p-5 sm:p-6 md:p-8 hover:border-amber-600 dark:hover:border-amber-500 cursor-pointer transition-all bg-stone-50/50 dark:bg-stone-800/20 flex flex-col justify-between space-y-5 sm:space-y-6 group"
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-xl bg-amber-900/30 text-amber-500 flex items-center justify-center font-serif text-2xl font-bold shadow-xs">
@@ -374,7 +374,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white">
+                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-stone-900 dark:text-white">
                     Retail Consumers & Institutional Buyers
                   </h3>
                   <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
@@ -412,23 +412,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 4. Deconstructing the Farm-to-Consumer Spread: The Economic Leakage */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="border border-stone-200/80 dark:border-stone-800 rounded-2xl bg-white dark:bg-[#141A17] p-8 sm:p-12 shadow-xs space-y-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6">
+        <div className="border border-stone-200/80 dark:border-stone-800 rounded-2xl bg-white dark:bg-[#141A17] p-5 sm:p-8 md:p-12 shadow-xs space-y-6 sm:space-y-8">
           <div className="max-w-2xl space-y-2">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-rose-700 dark:text-rose-400">
               The Value Chain Disparity
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-white tracking-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-stone-900 dark:text-white tracking-tight">
               Where does the agricultural rupee go?
             </h2>
-            <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
               Empirical breakdown of standard table tomatoes selling for ₹42.00/kg in urban markets, highlighting intermediate costs between harvest and consumption.
             </p>
           </div>
 
           {/* Sequential 5-Stage Value Breakdown */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4">
+            <div className="p-4 sm:p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
               <span className="text-stone-400 font-mono text-[10px] uppercase font-semibold block">Stage 01</span>
               <div className="font-mono text-2xl font-bold text-[#143828] dark:text-emerald-400 tabular-nums">
                 ₹20.00
@@ -444,7 +444,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
             </div>
 
-            <div className="p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
+            <div className="p-4 sm:p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
               <span className="text-stone-400 font-mono text-[10px] uppercase font-semibold block">Stage 02</span>
               <div className="font-mono text-2xl font-bold text-stone-700 dark:text-stone-300 tabular-nums">
                 ₹4.80
@@ -460,7 +460,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
             </div>
 
-            <div className="p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
+            <div className="p-4 sm:p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
               <span className="text-stone-400 font-mono text-[10px] uppercase font-semibold block">Stage 03</span>
               <div className="font-mono text-2xl font-bold text-stone-700 dark:text-stone-300 tabular-nums">
                 ₹7.20
@@ -476,7 +476,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
             </div>
 
-            <div className="p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
+            <div className="p-4 sm:p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
               <span className="text-stone-400 font-mono text-[10px] uppercase font-semibold block">Stage 04</span>
               <div className="font-mono text-2xl font-bold text-stone-700 dark:text-stone-300 tabular-nums">
                 ₹3.00
@@ -492,7 +492,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
             </div>
 
-            <div className="p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
+            <div className="p-4 sm:p-5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
               <span className="text-stone-400 font-mono text-[10px] uppercase font-semibold block">Stage 05</span>
               <div className="font-mono text-2xl font-bold text-amber-600 dark:text-amber-400 tabular-nums">
                 ₹7.00
@@ -510,10 +510,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Outcome comparison banner */}
-          <div className="p-6 rounded-xl bg-[#143828] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="p-4 sm:p-6 rounded-xl bg-[#143828] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="space-y-1 max-w-2xl">
               <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider block">
-                The PriceXact Direct Direct Advantage
+                The PriceXact Direct Advantage
               </span>
               <p className="text-xs sm:text-sm text-stone-200 leading-relaxed">
                 By enabling direct transactions within 25km, farmers earn up to <span className="font-bold text-white">₹28/kg (+40%)</span> while consumers purchase fresher produce at <span className="font-bold text-white">₹34/kg (-19%)</span>.
@@ -531,21 +531,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 5. Algorithmic Price Intelligence Pipeline */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="border border-stone-200/80 dark:border-stone-800 rounded-2xl bg-white dark:bg-[#141A17] p-8 sm:p-12 shadow-xs space-y-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6">
+        <div className="border border-stone-200/80 dark:border-stone-800 rounded-2xl bg-white dark:bg-[#141A17] p-5 sm:p-8 md:p-12 shadow-xs space-y-6 sm:space-y-8">
           <div className="max-w-2xl space-y-2">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
               Econometric Rigor
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-white tracking-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-stone-900 dark:text-white tracking-tight">
               The 4-stage data verification pipeline
             </h2>
-            <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
               How PriceXact cleans noisy crowdsourced market inputs into high-confidence statistical signals.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             <div className="space-y-2.5 border-l-2 border-stone-200 dark:border-stone-700 pl-4">
               <span className="font-mono text-stone-400 text-xs font-bold">01.</span>
               <h3 className="font-bold text-stone-900 dark:text-white text-sm">
@@ -590,19 +590,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 6. Attributable Testimonials & Field Evidence */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="space-y-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6">
+        <div className="space-y-6 sm:space-y-8">
           <div className="max-w-xl space-y-1">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
               Field Impact
             </span>
-            <h2 className="font-serif text-3xl font-bold text-stone-900 dark:text-white">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
               Proven results from mandis and households
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
               <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed italic">
                 "Before PriceXact, commission agents at Meerut Mandi quoted ₹18/kg for Sharbati wheat when wholesale was trading at ₹24/kg. Checking the trimmed benchmark on my phone gave me the leverage to demand ₹22.50/kg."
               </p>
@@ -621,7 +621,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
               <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed italic">
                 "We connected with an organic potato farmer 18km outside Delhi through PriceXact. Our residential society now procures directly at ₹16/kg instead of paying ₹28/kg at local supermarkets."
               </p>
@@ -640,7 +640,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
               <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed italic">
                 "The 10% outlier-trimmed calculation is legitimate econometric science. It automatically drops bogus bids from cartels, leaving farmers with clear visibility of actual equilibrium price."
               </p>

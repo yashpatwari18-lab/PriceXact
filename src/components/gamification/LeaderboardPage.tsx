@@ -35,9 +35,9 @@ export const LeaderboardPage: React.FC = () => {
     .sort((a, b) => b.trustScore - a.trustScore);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-6 sm:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-4 sm:p-6 md:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
           <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider mb-1">
             Community Verifier Standings
@@ -96,8 +96,8 @@ export const LeaderboardPage: React.FC = () => {
 
       {/* Leaderboard Table */}
       <div className="bg-white dark:bg-[#141A17] rounded-2xl border border-stone-200/80 dark:border-stone-800 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto scrollbar-thin">
+          <table className="w-full min-w-[680px] text-left text-xs whitespace-nowrap">
             <thead className="bg-stone-50 dark:bg-stone-800/60 text-stone-500 uppercase text-[10px] tracking-wider border-b border-stone-200 dark:border-stone-800">
               <tr>
                 <th className="py-3 px-4 font-semibold text-center w-12">Rank</th>

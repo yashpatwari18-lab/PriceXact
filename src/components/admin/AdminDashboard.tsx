@@ -38,9 +38,9 @@ export const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="bg-stone-900 text-white rounded-3xl p-6 sm:p-8 border border-stone-800 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-stone-900 text-white rounded-2xl p-4 sm:p-6 md:p-8 border border-stone-800 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold mb-2">
             <ShieldAlert className="w-3.5 h-3.5" />
@@ -280,9 +280,9 @@ export const AdminDashboard: React.FC = () => {
 
       {/* Tab 3: All Submissions */}
       {activeTab === 'submissions' && (
-        <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto scrollbar-thin">
+            <table className="w-full min-w-[650px] text-left text-xs whitespace-nowrap">
               <thead className="bg-stone-50 dark:bg-stone-800/60 text-stone-500 uppercase text-[10px] tracking-wider border-b border-stone-200 dark:border-stone-800">
                 <tr>
                   <th className="py-3 px-4">Commodity</th>
@@ -322,9 +322,9 @@ export const AdminDashboard: React.FC = () => {
 
       {/* Tab 4: User Registry */}
       {activeTab === 'users' && (
-        <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto scrollbar-thin">
+            <table className="w-full min-w-[650px] text-left text-xs whitespace-nowrap">
               <thead className="bg-stone-50 dark:bg-stone-800/60 text-stone-500 uppercase text-[10px] tracking-wider border-b border-stone-200 dark:border-stone-800">
                 <tr>
                   <th className="py-3 px-4">Name</th>

@@ -17,9 +17,9 @@ export const WeatherPage: React.FC = () => {
   const [selectedHub, setSelectedHub] = useState('meerut');
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-900 to-teal-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-emerald-900 to-teal-950 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold mb-2">
             <CloudSun className="w-3.5 h-3.5" />
@@ -41,7 +41,7 @@ export const WeatherPage: React.FC = () => {
       {/* Today's Conditions Hero */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Current Metrics Card */}
-        <div className="lg:col-span-6 bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 border border-stone-200 dark:border-stone-800 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-stone-900 rounded-2xl p-4 sm:p-6 md:p-8 border border-stone-200 dark:border-stone-800 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <div>

@@ -124,9 +124,9 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
   }, [farmerStats.mean, consumerStats.mean]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Top Search & Filter Bar */}
-      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-4 sm:p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div className="flex-1 min-w-[240px] relative">
           <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
           <input
@@ -404,16 +404,58 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
             </span>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          {/* Mobile Card List (< sm) */}
+          <div className="sm:hidden space-y-2.5">
+            {cropSubmissions.slice(0, 6).map((sub) => (
+              <div
+                key={sub.id}
+                className="p-3 rounded-xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200/80 dark:border-stone-700/80 space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-xs text-stone-900 dark:text-white">
+                    {sub.submitterName}
+                  </span>
+                  <span className="text-[10px] text-stone-400 font-mono">
+                    {sub.date}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-stone-600 dark:text-stone-300">
+                    {sub.marketName}
+                  </span>
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${
+                    sub.transactionType === 'sell'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300'
+                      : 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300'
+                  }`}>
+                    {sub.transactionType === 'sell' ? 'Farmgate Sale' : 'Retail Purchase'}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between pt-1.5 border-t border-stone-200/60 dark:border-stone-700/60 font-mono text-xs">
+                  <span className="text-stone-500 text-[11px]">
+                    Reported: ₹{sub.originalPrice}/{sub.originalUnit}
+                  </span>
+                  <span className="font-bold text-stone-900 dark:text-white">
+                    Normalized: ₹{sub.normalizedPricePerKg.toFixed(2)}/kg
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop/Tablet Table (>= sm) with Horizontal Scroll & Min-Width */}
+          <div className="hidden sm:block overflow-x-auto scrollbar-thin">
+            <table className="w-full min-w-[620px] text-left text-xs whitespace-nowrap">
               <thead>
                 <tr className="text-[10px] uppercase tracking-wider text-stone-400 border-b border-stone-100 dark:border-stone-800">
-                  <th className="pb-2 font-medium">Participant</th>
-                  <th className="pb-2 font-medium">Mandi Location</th>
-                  <th className="pb-2 font-medium">Type</th>
-                  <th className="pb-2 text-right font-medium">Reported Price</th>
-                  <th className="pb-2 text-right font-medium">Normalized (₹/kg)</th>
-                  <th className="pb-2 text-right font-medium">Timestamp</th>
+                  <th className="pb-2.5 font-medium">Participant</th>
+                  <th className="pb-2.5 font-medium">Mandi Location</th>
+                  <th className="pb-2.5 font-medium">Type</th>
+                  <th className="pb-2.5 text-right font-medium">Reported Price</th>
+                  <th className="pb-2.5 text-right font-medium">Normalized (₹/kg)</th>
+                  <th className="pb-2.5 text-right font-medium">Timestamp</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100 dark:divide-stone-800 font-mono text-[11px] tabular-nums">
