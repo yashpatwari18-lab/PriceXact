@@ -17,10 +17,13 @@ import {
   ArrowRight,
   Calculator,
   CheckCircle,
+  CreditCard,
+  FileText,
 } from 'lucide-react';
 
 interface FarmerDashboardProps {
   openSubmitModal: () => void;
+  openAuthModal?: (mode: 'login' | 'register') => void;
   onNavigateToPrices: (cropId?: string) => void;
   onNavigateToCompare: () => void;
   onNavigateToCalculator: () => void;
@@ -29,6 +32,7 @@ interface FarmerDashboardProps {
 
 export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
   openSubmitModal,
+  openAuthModal,
   onNavigateToPrices,
   onNavigateToCompare,
   onNavigateToCalculator,
@@ -79,6 +83,37 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
             {currentUser.badges[0] || 'Smart Farmer'}
           </span>
         </div>
+      </div>
+
+      {/* Kisan Credit Card (KCC) & Khatian Land Record Verification Card */}
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-center border border-amber-200/60 dark:border-amber-800/40 shrink-0">
+            <CreditCard className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-bold text-stone-900 dark:text-white text-sm">
+                Kisan Credit Card (KCC) & Khatian Land Records
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded font-mono font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50">
+                {currentUser.verificationStatus === 'verified' ? '✓ Verified Producer' : 'Pending Verification'}
+              </span>
+            </div>
+            <div className="text-xs text-stone-500 dark:text-stone-400 flex flex-wrap items-center gap-3 mt-1 font-mono">
+              <span>KCC Number: <strong className="text-stone-800 dark:text-stone-200">{currentUser.kccId || 'KCC-UP-98234-MEE'}</strong></span>
+              <span>·</span>
+              <span>Khatian / RoR: <strong className="text-stone-800 dark:text-stone-200">{currentUser.khatianNumber || 'KHAT-742-MEERUT'}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => openAuthModal && openAuthModal('register')}
+          className="px-3.5 py-2 rounded-lg border border-stone-200 dark:border-stone-700 hover:border-stone-400 bg-stone-50 dark:bg-stone-800 text-stone-700 dark:text-stone-200 text-xs font-semibold whitespace-nowrap transition-colors"
+        >
+          Update KCC / Khatian
+        </button>
       </div>
 
       {/* Quick Action Ribbon */}

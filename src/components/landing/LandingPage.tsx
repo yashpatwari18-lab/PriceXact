@@ -88,16 +88,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="space-y-24 pb-24">
+    <div className="pb-16 sm:pb-24">
       {/* 1. Live APMC Mandi Commodities Ticker Strip */}
-      <div className="w-full bg-[#111714] text-stone-300 border-b border-stone-800/80 overflow-hidden py-2 text-xs select-none">
+      <div className="w-full bg-stone-50/90 dark:bg-[#111714] text-stone-700 dark:text-stone-300 border-b border-stone-200/80 dark:border-stone-800/80 overflow-hidden py-2 text-xs select-none transition-colors">
         <div className="flex animate-ticker whitespace-nowrap">
           {[...tickerItems, ...tickerItems].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center gap-2 px-6 border-r border-stone-800/80">
-              <span className="font-semibold text-stone-200">{item.name}</span>
-              <span className="text-[11px] text-stone-500 font-mono">[{item.mandi}]</span>
-              <span className="font-mono font-medium text-stone-100 tabular-nums">{item.price}</span>
-              <span className={`text-[10px] font-mono tabular-nums flex items-center gap-0.5 ${item.up ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div key={idx} className="inline-flex items-center gap-2 px-6 border-r border-stone-200/80 dark:border-stone-800/80">
+              <span className="font-semibold text-stone-800 dark:text-stone-200">{item.name}</span>
+              <span className="text-[11px] text-stone-400 dark:text-stone-500 font-mono">[{item.mandi}]</span>
+              <span className="font-mono font-medium text-stone-900 dark:text-stone-100 tabular-nums">{item.price}</span>
+              <span className={`text-[10px] font-mono tabular-nums flex items-center gap-0.5 ${item.up ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                 {item.up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                 {item.change}
               </span>
@@ -106,8 +106,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </div>
 
-      {/* 2. Hero Section: Editorial Elegance & Commodities Terminal */}
-      <section className="relative pt-6 sm:pt-12 px-4 sm:px-6 max-w-7xl mx-auto">
+      <div className="space-y-16 sm:space-y-24 pt-4 sm:pt-8">
+        {/* 2. Hero Section: Editorial Elegance & Commodities Terminal */}
+        <section className="relative px-4 sm:px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
           {/* Left Hero Narrative */}
           <div className="lg:col-span-7 space-y-6">
@@ -660,6 +661,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 };

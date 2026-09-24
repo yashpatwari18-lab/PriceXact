@@ -5,7 +5,6 @@
 
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { DemoBanner } from './components/common/DemoBanner';
 import { Navbar } from './components/common/Navbar';
 import { MobileNav } from './components/common/MobileNav';
 import { LandingPage } from './components/landing/LandingPage';
@@ -60,9 +59,6 @@ function MainApp() {
 
   return (
     <div className="min-h-screen flex flex-col bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors pb-16 lg:pb-0">
-      {/* Persistent Demo Persona Switcher Ribbon */}
-      <DemoBanner />
-
       {/* Main Responsive Header */}
       <Navbar
         activeTab={activeTab}
@@ -86,6 +82,7 @@ function MainApp() {
           currentUser.role === 'farmer' ? (
             <FarmerDashboard
               openSubmitModal={() => setIsSubmitModalOpen(true)}
+              openAuthModal={(mode) => setAuthModal({ isOpen: true, mode })}
               onNavigateToPrices={navigateToPrices}
               onNavigateToCompare={() => setActiveTab('compare')}
               onNavigateToCalculator={() => setActiveTab('calculator')}
