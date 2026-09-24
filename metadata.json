@@ -1,0 +1,6 @@
+{
+  "name": "PriceXact - Agricultural Price Intelligence & Direct Market Platform",
+  "description": "Smart platform bridging the price gap between farmers and consumers through crowdsourced agricultural price intelligence, fair market insights, and predictive forecasting.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
