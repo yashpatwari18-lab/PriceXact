@@ -38,6 +38,7 @@ export interface Crop {
   bengaliName: string;
   category: CropCategory;
   icon: string;
+  variety?: string;
   defaultUnit: string;
   baseReferencePrice: number; // in Rs/kg
   season: string;

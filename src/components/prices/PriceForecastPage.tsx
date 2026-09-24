@@ -81,53 +81,57 @@ export const PriceForecastPage: React.FC<PriceForecastPageProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Top Banner */}
-      <div className="bg-stone-900 text-white rounded-3xl p-6 sm:p-8 border border-stone-800 shadow-xl relative overflow-hidden">
-        <div className="max-w-3xl relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            Statistical Linear Regression Engine
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-6 sm:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            Econometric Linear Regression
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
             Predictive Price Forecasting (₹/kg)
           </h1>
-          <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
-            PriceXact employs ordinary least squares linear regression over chronological transaction points to estimate future market trends. Clearly labeled as a model-based estimate.
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1 max-w-2xl leading-relaxed">
+            Ordinary least squares linear regression over chronological transaction points to estimate forward market direction. Labeled as an econometric model estimate.
           </p>
+        </div>
+
+        <div className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-50 dark:bg-stone-800/60 border border-stone-200/80 dark:border-stone-700">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#143828] dark:text-emerald-400" />
+          <span>90% Standard Error Interval</span>
         </div>
       </div>
 
       {/* Control Filters */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl p-5 border border-stone-200 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div>
-            <label className="block text-[11px] font-bold text-stone-500 uppercase mb-1">
+            <label className="block text-[11px] font-semibold text-stone-500 uppercase mb-1">
               Select Commodity
             </label>
             <select
               value={selectedCropId}
               onChange={(e) => setSelectedCropId(e.target.value)}
-              className="text-xs p-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 font-semibold"
+              className="text-xs p-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 font-medium"
             >
               {crops.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.icon} {c.name}
+                  {c.name}
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-stone-500 uppercase mb-1">
+            <label className="block text-[11px] font-semibold text-stone-500 uppercase mb-1">
               Mandi Yard
             </label>
             <select
               value={selectedMarketId}
               onChange={(e) => setSelectedMarketId(e.target.value)}
-              className="text-xs p-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 font-semibold"
+              className="text-xs p-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 font-medium"
             >
               {markets.map((m) => (
                 <option key={m.id} value={m.id}>
-                  {m.name}
+                  {m.name} ({m.district})
                 </option>
               ))}
             </select>
@@ -136,18 +140,18 @@ export const PriceForecastPage: React.FC<PriceForecastPageProps> = ({
 
         {/* Forecast Horizon Switcher */}
         <div>
-          <label className="block text-[11px] font-bold text-stone-500 uppercase mb-1">
+          <label className="block text-[11px] font-semibold text-stone-500 uppercase mb-1">
             Forecast Horizon
           </label>
-          <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl">
+          <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-lg">
             {([7, 14, 30] as const).map((days) => (
               <button
                 key={days}
                 onClick={() => setForecastDays(days)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                   forecastDays === days
-                    ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'text-stone-600 dark:text-stone-300 hover:text-stone-900'
+                    ? 'bg-white dark:bg-[#1C2520] text-stone-900 dark:text-white shadow-2xs font-semibold'
+                    : 'text-stone-500 hover:text-stone-900 dark:hover:text-white'
                 }`}
               >
                 {days}-Day Horizon
@@ -159,84 +163,81 @@ export const PriceForecastPage: React.FC<PriceForecastPageProps> = ({
 
       {/* Forecast Intelligence Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm">
-          <span className="text-[11px] font-bold text-stone-500 uppercase block">
+        <div className="bg-white dark:bg-[#141A17] p-5 rounded-xl border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-1">
+          <span className="text-[11px] font-semibold text-stone-500 uppercase block">
             {forecastDays}-Day Projected Rate
           </span>
-          <div className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
+          <div className="font-mono text-3xl font-bold text-stone-900 dark:text-white tabular-nums">
             ₹{forecastResult.predictedPrice}
             <span className="text-xs font-normal text-stone-400 ml-1">/kg</span>
           </div>
-          <span className="text-[10px] text-stone-400 mt-1 block">
-            Model endpoint trajectory
+          <span className="text-[10px] text-stone-400 block pt-0.5 font-sans">
+            Linear regression model endpoint
           </span>
         </div>
 
-        <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm">
-          <span className="text-[11px] font-bold text-stone-500 uppercase block">
-            Trend Direction
+        <div className="bg-white dark:bg-[#141A17] p-5 rounded-xl border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-1">
+          <span className="text-[11px] font-semibold text-stone-500 uppercase block">
+            Trend Trajectory
           </span>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-1.5 pt-1">
             {forecastResult.trendDirection === 'increasing' ? (
-              <span className="text-emerald-600 dark:text-emerald-400 text-xl font-bold flex items-center gap-1">
-                <TrendingUp className="w-5 h-5" /> Increasing (+Slope)
+              <span className="font-mono text-lg font-bold text-[#143828] dark:text-emerald-400 flex items-center gap-1">
+                <TrendingUp className="w-4 h-4" /> Rising (+Slope)
               </span>
             ) : forecastResult.trendDirection === 'decreasing' ? (
-              <span className="text-rose-600 dark:text-rose-400 text-xl font-bold flex items-center gap-1">
-                <TrendingDown className="w-5 h-5" /> Moderating (-Slope)
+              <span className="font-mono text-lg font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                <TrendingDown className="w-4 h-4" /> Easing (-Slope)
               </span>
             ) : (
-              <span className="text-stone-600 text-xl font-bold">Stable</span>
+              <span className="font-mono text-lg font-bold text-stone-600">Stable</span>
             )}
           </div>
-          <span className="text-[10px] text-stone-400 mt-1 block">
-            Regression slope: {forecastResult.slope} ₹/day
+          <span className="text-[10px] text-stone-400 block font-mono tabular-nums">
+            Slope: {forecastResult.slope} ₹/day
           </span>
         </div>
 
-        <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm">
-          <span className="text-[11px] font-bold text-stone-500 uppercase block">
-            Historical Benchmark
+        <div className="bg-white dark:bg-[#141A17] p-5 rounded-xl border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-1">
+          <span className="text-[11px] font-semibold text-stone-500 uppercase block">
+            Historical Baseline
           </span>
-          <div className="text-3xl font-extrabold text-stone-800 dark:text-stone-200 mt-1">
+          <div className="font-mono text-3xl font-bold text-stone-800 dark:text-stone-200 tabular-nums">
             ₹{forecastResult.historicalAverage}
             <span className="text-xs font-normal text-stone-400 ml-1">/kg</span>
           </div>
-          <span className="text-[10px] text-stone-400 mt-1 block">
-            Computed over {forecastResult.dataPointsUsed} historical observations
+          <span className="text-[10px] text-stone-400 block pt-0.5 font-sans">
+            Over {forecastResult.dataPointsUsed} historical observations
           </span>
         </div>
 
-        <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm">
-          <span className="text-[11px] font-bold text-stone-500 uppercase block">
+        <div className="bg-white dark:bg-[#141A17] p-5 rounded-xl border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-1">
+          <span className="text-[11px] font-semibold text-stone-500 uppercase block">
             Confidence Rating
           </span>
-          <div className="flex items-center gap-1.5 mt-1 text-emerald-700 dark:text-emerald-300 font-bold text-xl">
-            <ShieldCheck className="w-5 h-5" />
-            <span>{forecastResult.confidenceIndicator} Confidence</span>
+          <div className="font-mono text-xl font-bold text-stone-900 dark:text-white pt-1">
+            {forecastResult.confidenceIndicator} Confidence
           </div>
-          <span className="text-[10px] text-stone-400 mt-1 block">
-            Standard error margin band applied
+          <span className="text-[10px] text-stone-400 block pt-0.5 font-sans">
+            Standard error envelope applied
           </span>
         </div>
       </div>
 
       {/* Combined Historical + Forecast Chart */}
-      <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 border border-stone-200 dark:border-stone-800 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-6 sm:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 className="text-base font-bold text-stone-900 dark:text-white flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-emerald-600" />
+            <h3 className="font-serif text-lg font-bold text-stone-900 dark:text-white flex items-center gap-2">
               Historical Observed & Projected Trajectory ({selectedCrop.name})
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              Solid green shows historical observations; dashed emerald indicates linear regression forecast with upper & lower bounds.
+              Solid line shows historical observations; dashed line indicates linear regression projection with 90% confidence envelope.
             </p>
           </div>
 
-          <div className="px-3 py-1 bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 rounded-full text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
-            <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
-            <span>Model-based estimate</span>
+          <div className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1.5 font-mono">
+            <span>Model estimate · OLS Projection</span>
           </div>
         </div>
 

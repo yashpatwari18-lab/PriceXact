@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Language } from '../../services/i18n';
 import { storage } from '../../services/storageService';
 import {
-  Wheat,
   Bell,
   Sun,
   Moon,
   Globe,
-  PlusCircle,
+  Plus,
   Menu,
   X,
   ShieldCheck,
-  Award,
   ChevronDown,
   LogOut,
   User as UserIcon,
-  Settings,
-  HelpCircle,
+  SlidersHorizontal,
+  Compass,
+  Check,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -48,29 +46,33 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
   const notifications = storage
     .getState()
     .notifications.filter((n) => n.userId === currentUser.id)
     .slice(0, 5);
 
-  const navLinks = [
-    { id: 'home', label: t.navHome },
-    { id: 'dashboard', label: currentUser.role === 'farmer' ? 'Farmer Hub' : currentUser.role === 'consumer' ? 'Consumer Hub' : 'My Hub' },
-    { id: 'prices', label: t.navPrices },
-    { id: 'compare', label: t.navCompare },
-    { id: 'forecast', label: t.navForecast },
-    { id: 'calculator', label: 'Price Engine' },
-    { id: 'sellers', label: t.navFarmers },
-    { id: 'schemes', label: t.navSchemes },
-    { id: 'weather', label: t.navWeather },
-    { id: 'expert', label: t.navExpert },
-    { id: 'leaderboard', label: t.navLeaderboard },
-    { id: 'rewards', label: t.navRewards },
+  const primaryNavLinks = [
+    { id: 'home', label: 'Overview' },
+    { id: 'prices', label: 'Market Prices' },
+    { id: 'compare', label: 'Spread Ledger' },
+    { id: 'forecast', label: 'Forecast' },
+    { id: 'sellers', label: 'Direct Sellers' },
+  ];
+
+  const secondaryNavLinks = [
+    { id: 'dashboard', label: currentUser.role === 'farmer' ? 'Producer Console' : 'Consumer Console' },
+    { id: 'calculator', label: '10% Trimming Engine' },
+    { id: 'schemes', label: 'Government Welfare Schemes' },
+    { id: 'weather', label: 'Agro-Meteorology' },
+    { id: 'expert', label: 'Agricultural Experts Q&A' },
+    { id: 'leaderboard', label: 'Trust & Reputation Leaderboard' },
+    { id: 'rewards', label: 'Producer Incentives & Rewards' },
   ];
 
   if (currentUser.role === 'admin') {
-    navLinks.push({ id: 'admin', label: 'Admin Hub' });
+    secondaryNavLinks.push({ id: 'admin', label: 'Clearinghouse Operations' });
   }
 
   const handleMarkAllRead = () => {
@@ -78,293 +80,273 @@ export const Navbar: React.FC<NavbarProps> = ({
     refreshUserState();
   };
 
+  const languages = [
+    { code: 'en', label: 'English', sub: 'National' },
+    { code: 'hi', label: 'हिन्दी', sub: 'Hindi' },
+    { code: 'bn', label: 'বাংলা', sub: 'Bengali' },
+  ];
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 transition-colors">
+    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0D110F]/95 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
+          {/* Zone 1: Distinctive Single-Element Brand Wordmark */}
           <div
             onClick={() => setActiveTab('home')}
-            className="flex items-center gap-2 cursor-pointer group"
+            className="flex items-center gap-2.5 cursor-pointer select-none group"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-700 to-green-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-              <Wheat className="w-6 h-6" />
+            {/* Geometric Botanical Monogram */}
+            <div className="w-8 h-8 rounded-lg bg-[#143828] text-emerald-400 flex items-center justify-center font-bold text-sm tracking-tighter shadow-xs border border-emerald-900/60 transition-transform group-hover:scale-105">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M12 2v20" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl font-bold tracking-tight text-stone-900 dark:text-white">
-                  Price<span className="text-emerald-600 dark:text-emerald-400">Xact</span>
-                </span>
-                <span className="text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                  Agri Intel
-                </span>
-              </div>
-              <p className="text-[11px] text-stone-500 dark:text-stone-400 hidden sm:block leading-none">
-                Fair Market Platform
-              </p>
+            <div className="flex flex-col">
+              <span className="font-serif text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50 leading-none">
+                Price<span className="text-[#1B543A] dark:text-emerald-400 font-sans font-semibold">Xact</span>
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-stone-600 dark:text-stone-300 font-mono mt-0.5">
+                Agricultural Intelligence
+              </span>
             </div>
           </div>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-            {navLinks.slice(0, 7).map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`px-3 py-1.5 text-xs xl:text-sm font-medium rounded-lg transition-colors ${
-                  activeTab === item.id
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
-                    : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-800'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+          {/* Zone 2: 4-6 Clean Text Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+            {primaryNavLinks.map((item) => {
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`text-xs xl:text-sm font-medium tracking-normal transition-colors py-1.5 relative whitespace-nowrap ${
+                    isActive
+                      ? 'text-stone-950 dark:text-white font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#143828] dark:after:bg-emerald-400'
+                      : 'text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
 
-            {/* More dropdown for remaining nav items */}
+            {/* Quiet Secondary Dropdown */}
             <div className="relative group">
-              <button className="px-3 py-1.5 text-xs xl:text-sm font-medium rounded-lg text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center gap-1">
-                <span>More</span>
-                <ChevronDown className="w-3.5 h-3.5" />
+              <button className="text-xs xl:text-sm font-medium text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white flex items-center gap-1 py-1.5 whitespace-nowrap">
+                <span>Analytics & Hubs</span>
+                <ChevronDown className="w-3.5 h-3.5 text-stone-400 group-hover:text-stone-700 dark:group-hover:text-stone-200 transition-colors" />
               </button>
-              <div className="absolute right-0 mt-1 w-48 bg-white dark:bg-stone-800 rounded-xl shadow-xl border border-stone-200 dark:border-stone-700 py-1 hidden group-hover:block z-50">
-                {navLinks.slice(7).map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full text-left px-4 py-2 text-xs font-medium hover:bg-emerald-50 dark:hover:bg-stone-700 ${
-                      activeTab === item.id ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-stone-700 dark:text-stone-200'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+
+              <div className="absolute left-0 mt-1 w-64 bg-white dark:bg-[#141A17] rounded-xl shadow-xl border border-stone-200 dark:border-stone-800 py-1.5 hidden group-hover:block z-50">
+                <div className="px-3.5 py-1.5 text-[10px] uppercase tracking-wider text-stone-400 font-semibold border-b border-stone-100 dark:border-stone-800/80">
+                  Specialized Portals & Tools
+                </div>
+                <div className="py-1">
+                  {secondaryNavLinks.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      className={`w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-800/80 transition-colors flex items-center justify-between ${
+                        activeTab === item.id
+                          ? 'text-[#143828] dark:text-emerald-400 font-semibold bg-stone-50 dark:bg-stone-800/40'
+                          : 'text-stone-700 dark:text-stone-300'
+                      }`}
+                    >
+                      <span>{item.label}</span>
+                      {activeTab === item.id && <span className="w-1.5 h-1.5 rounded-full bg-[#143828] dark:bg-emerald-400" />}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </nav>
 
-          {/* Right Action Icons & Profile */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Submit Price Action Button */}
+          {/* Zone 3: 1-2 Primary Actions & Controls */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Primary Action: Submit Price */}
             <button
               onClick={openSubmitModal}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#143828] hover:bg-[#1B543A] text-white shadow-xs transition-colors whitespace-nowrap"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>{t.submitPrice}</span>
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Submit Market Rate</span>
             </button>
 
-            {/* Language Selector */}
-            <div className="relative group">
+            {/* Language Selector Dropdown */}
+            <div className="relative">
               <button
-                className="p-1.5 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg flex items-center gap-1 text-xs font-medium"
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                className="p-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg flex items-center gap-1 text-xs font-medium transition-colors"
                 title="Select Language"
               >
-                <Globe className="w-4 h-4 text-stone-500" />
-                <span className="uppercase font-semibold">{language}</span>
+                <Globe className="w-3.5 h-3.5 text-stone-400" />
+                <span className="uppercase text-[11px] font-semibold">{language}</span>
               </button>
-              <div className="absolute right-0 mt-1 w-32 bg-white dark:bg-stone-800 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 hidden group-hover:block z-50">
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={`w-full text-left px-3 py-1.5 text-xs ${
-                    language === 'en' ? 'font-bold text-emerald-600' : 'text-stone-700 dark:text-stone-200'
-                  } hover:bg-stone-100 dark:hover:bg-stone-700`}
-                >
-                  English (EN)
-                </button>
-                <button
-                  onClick={() => setLanguage('hi')}
-                  className={`w-full text-left px-3 py-1.5 text-xs ${
-                    language === 'hi' ? 'font-bold text-emerald-600' : 'text-stone-700 dark:text-stone-200'
-                  } hover:bg-stone-100 dark:hover:bg-stone-700`}
-                >
-                  हिन्दी (HI)
-                </button>
-                <button
-                  onClick={() => setLanguage('bn')}
-                  className={`w-full text-left px-3 py-1.5 text-xs ${
-                    language === 'bn' ? 'font-bold text-emerald-600' : 'text-stone-700 dark:text-stone-200'
-                  } hover:bg-stone-100 dark:hover:bg-stone-700`}
-                >
-                  বাংলা (BN)
-                </button>
-              </div>
+
+              {langDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-1 w-40 bg-white dark:bg-[#141A17] rounded-xl shadow-xl border border-stone-200 dark:border-stone-800 py-1.5 z-50 text-xs">
+                    {languages.map((l) => (
+                      <button
+                        key={l.code}
+                        onClick={() => {
+                          setLanguage(l.code as any);
+                          setLangDropdownOpen(false);
+                        }}
+                        className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-stone-50 dark:hover:bg-stone-800/80 transition-colors ${
+                          language === l.code ? 'font-semibold text-[#143828] dark:text-emerald-400 bg-stone-50 dark:bg-stone-800/40' : 'text-stone-700 dark:text-stone-300'
+                        }`}
+                      >
+                        <div>
+                          <div>{l.label}</div>
+                          <div className="text-[10px] text-stone-400">{l.sub}</div>
+                        </div>
+                        {language === l.code && <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+              className="p-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
               title="Toggle Dark Mode"
             >
               {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            {/* Notification Bell */}
+            {/* Notifications Bell */}
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="relative p-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                className="relative p-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
                 title="Notifications"
               >
                 <Bell className="w-4 h-4" />
                 {unreadNotificationsCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-emerald-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center animate-pulse">
-                    {unreadNotificationsCount}
-                  </span>
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-600 rounded-full" />
                 )}
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-stone-800 rounded-xl shadow-2xl border border-stone-200 dark:border-stone-700 py-2 z-50">
-                  <div className="flex items-center justify-between px-4 py-2 border-b border-stone-100 dark:border-stone-700">
-                    <span className="text-xs font-bold text-stone-900 dark:text-white">
-                      Notifications ({notifications.length})
-                    </span>
-                    <button
-                      onClick={handleMarkAllRead}
-                      className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
-                    >
-                      Mark all as read
-                    </button>
-                  </div>
-                  <div className="max-h-72 overflow-y-auto divide-y divide-stone-100 dark:divide-stone-700/50">
-                    {notifications.length === 0 ? (
-                      <div className="p-4 text-center text-xs text-stone-400">
-                        No notifications yet
-                      </div>
-                    ) : (
-                      notifications.map((n) => (
-                        <div
-                          key={n.id}
-                          className={`p-3 text-xs transition-colors hover:bg-stone-50 dark:hover:bg-stone-700/50 ${
-                            !n.isRead ? 'bg-emerald-50/40 dark:bg-emerald-950/20' : ''
-                          }`}
-                        >
-                          <div className="font-semibold text-stone-900 dark:text-stone-100">
-                            {n.title}
-                          </div>
-                          <p className="text-stone-600 dark:text-stone-300 text-[11px] mt-0.5">
-                            {n.message}
-                          </p>
-                          <span className="text-[10px] text-stone-400 mt-1 block">
-                            {new Date(n.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* User Trust Score Pill */}
-            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/50 text-xs">
-              <Award className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-stone-600 dark:text-stone-300 font-medium">Trust:</span>
-              <span className="font-bold text-emerald-700 dark:text-emerald-300">
-                {currentUser.trustScore}
-              </span>
-            </div>
-
-            {/* Profile Menu Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              >
-                {currentUser.avatar ? (
-                  <img
-                    src={currentUser.avatar}
-                    alt={currentUser.name}
-                    className="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/30"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">
-                    {currentUser.name.charAt(0)}
-                  </div>
-                )}
-                <ChevronDown className="w-3 h-3 text-stone-400" />
-              </button>
-
-              {userDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-stone-800 rounded-xl shadow-2xl border border-stone-200 dark:border-stone-700 py-2 z-50">
-                  <div className="px-4 py-2 border-b border-stone-100 dark:border-stone-700">
-                    <p className="text-xs font-bold text-stone-900 dark:text-white truncate">
-                      {currentUser.name}
-                    </p>
-                    <p className="text-[11px] text-stone-500 dark:text-stone-400 truncate">
-                      {currentUser.email}
-                    </p>
-                    <div className="mt-1 flex items-center gap-1">
-                      <span className="inline-block text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
-                        {currentUser.role}
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setNotificationsOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#141A17] rounded-xl shadow-2xl border border-stone-200 dark:border-stone-800 py-2 z-50">
+                    <div className="flex items-center justify-between px-4 py-2 border-b border-stone-100 dark:border-stone-800">
+                      <span className="text-xs font-semibold text-stone-900 dark:text-white">
+                        Market Notifications ({notifications.length})
                       </span>
-                      {currentUser.verificationStatus === 'verified' && (
-                        <span className="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-semibold">
-                          <ShieldCheck className="w-3 h-3" /> Verified
-                        </span>
+                      <button
+                        onClick={handleMarkAllRead}
+                        className="text-[11px] text-[#143828] dark:text-emerald-400 hover:underline font-medium"
+                      >
+                        Mark all read
+                      </button>
+                    </div>
+                    <div className="max-h-72 overflow-y-auto divide-y divide-stone-100 dark:divide-stone-800">
+                      {notifications.length === 0 ? (
+                        <div className="p-4 text-center text-xs text-stone-400">
+                          No notifications yet
+                        </div>
+                      ) : (
+                        notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            className={`p-3 text-xs transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/60 ${
+                              !n.isRead ? 'bg-stone-50/70 dark:bg-stone-800/30' : ''
+                            }`}
+                          >
+                            <div className="font-semibold text-stone-900 dark:text-stone-100">
+                              {n.title}
+                            </div>
+                            <p className="text-stone-600 dark:text-stone-300 text-[11px] mt-0.5">
+                              {n.message}
+                            </p>
+                            <span className="text-[10px] text-stone-400 mt-1 block font-mono">
+                              {n.date}
+                            </span>
+                          </div>
+                        ))
                       )}
                     </div>
                   </div>
-
-                  <div className="py-1">
-                    <button
-                      onClick={() => {
-                        setActiveTab('dashboard');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700 flex items-center gap-2"
-                    >
-                      <UserIcon className="w-3.5 h-3.5" /> Dashboard
-                    </button>
-                    <button
-                      onClick={() => {
-                        setActiveTab('rewards');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700 flex items-center gap-2"
-                    >
-                      <Award className="w-3.5 h-3.5" /> My Badges & Rewards
-                    </button>
-                    {currentUser.role === 'admin' && (
-                      <button
-                        onClick={() => {
-                          setActiveTab('admin');
-                          setUserDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-xs text-emerald-600 dark:text-emerald-400 hover:bg-stone-50 dark:hover:bg-stone-700 flex items-center gap-2 font-medium"
-                      >
-                        <Settings className="w-3.5 h-3.5" /> Admin Moderation
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="border-t border-stone-100 dark:border-stone-700 pt-1">
-                    <button
-                      onClick={() => {
-                        openAuthModal('login');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700 flex items-center gap-2"
-                    >
-                      <HelpCircle className="w-3.5 h-3.5" /> Switch User / Login
-                    </button>
-                    <button
-                      onClick={() => {
-                        logout();
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 flex items-center gap-2 font-medium"
-                    >
-                      <LogOut className="w-3.5 h-3.5" /> Sign Out
-                    </button>
-                  </div>
-                </div>
+                </>
               )}
             </div>
 
-            {/* Mobile menu hamburger toggle */}
+            {/* Profile Avatar & Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="flex items-center gap-1.5 p-1 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#143828] text-emerald-300 flex items-center justify-center font-bold text-xs border border-emerald-800/50">
+                  {currentUser.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .slice(0, 2)}
+                </div>
+              </button>
+
+              {userDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setUserDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#141A17] rounded-xl shadow-2xl border border-stone-200 dark:border-stone-800 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-stone-100 dark:border-stone-800">
+                      <div className="font-semibold text-xs text-stone-900 dark:text-white">
+                        {currentUser.name}
+                      </div>
+                      <div className="text-[11px] text-stone-500 capitalize">
+                        {currentUser.role} · {currentUser.location.district}
+                      </div>
+                    </div>
+
+                    <div className="py-1">
+                      <button
+                        onClick={() => {
+                          setActiveTab('dashboard');
+                          setUserDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-xs text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2"
+                      >
+                        <UserIcon className="w-3.5 h-3.5" />
+                        <span>Manage Dashboard</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          openAuthModal('login');
+                          setUserDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-xs text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>Switch User Account</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          logout();
+                          setUserDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
@@ -373,39 +355,51 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 px-4 pt-2 pb-6 space-y-1">
-          <div className="grid grid-cols-2 gap-1 pb-3 mb-2 border-b border-stone-100 dark:border-stone-800">
-            <button
-              onClick={openSubmitModal}
-              className="col-span-2 flex items-center justify-center gap-2 py-2 px-3 bg-emerald-600 text-white rounded-lg font-semibold text-xs"
-            >
-              <PlusCircle className="w-4 h-4" /> {t.submitPrice}
-            </button>
-          </div>
-          <div className="grid grid-cols-2 gap-1 text-xs">
-            {navLinks.map((item) => (
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden py-4 border-t border-stone-200 dark:border-stone-800 space-y-1">
+            {primaryNavLinks.map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
                   setActiveTab(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`text-left px-3 py-2 rounded-lg font-medium ${
+                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium ${
                   activeTab === item.id
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 font-semibold'
-                    : 'text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800'
+                    ? 'bg-[#143828] text-white font-semibold'
+                    : 'text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
                 }`}
               >
                 {item.label}
               </button>
             ))}
+
+            <div className="pt-2 border-t border-stone-100 dark:border-stone-800 my-2">
+              <span className="px-3 text-[10px] font-semibold text-stone-400 uppercase tracking-wider block mb-1">
+                More Portals
+              </span>
+              {secondaryNavLinks.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-3 py-1.5 rounded-lg text-xs ${
+                    activeTab === item.id
+                      ? 'text-[#143828] font-semibold'
+                      : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 };

@@ -165,43 +165,51 @@ function MainApp() {
       />
 
       {/* Application Footer */}
-      <footer className="bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 py-10 mt-12 text-xs">
+      <footer className="bg-white dark:bg-[#0D110F] border-t border-stone-200/80 dark:border-stone-800/80 py-12 mt-16 text-xs transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Wheat className="w-5 h-5 text-emerald-600" />
-                <span className="font-extrabold text-stone-900 dark:text-white text-base">
-                  Price<span className="text-emerald-600">Xact</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div className="space-y-3 md:col-span-1">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-[#143828] text-emerald-400 flex items-center justify-center font-bold text-xs tracking-tighter">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                    <path d="M12 2v20" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <span className="font-serif text-xl font-bold tracking-tight text-stone-900 dark:text-white">
+                  Price<span className="text-[#143828] dark:text-emerald-400 font-sans font-semibold">Xact</span>
                 </span>
               </div>
               <p className="text-stone-500 dark:text-stone-400 text-xs leading-relaxed">
-                A smart agricultural intelligence platform designed to eliminate the information asymmetry gap between farmers and end consumers through statistical normalization and trimmed price intelligence.
+                National agricultural price intelligence network designed to eliminate market information asymmetry through statistical normalization and 10% outlier-trimmed price equilibrium.
               </p>
+              <div className="text-[11px] text-stone-400 pt-1 font-mono">
+                Clearinghouse Mandis: Meerut, Azadpur, Lasalgaon, Vashi, Kolar
+              </div>
             </div>
 
             <div>
-              <span className="font-bold text-stone-900 dark:text-white uppercase tracking-wider block mb-2 text-[11px]">
+              <span className="font-bold text-stone-900 dark:text-white uppercase tracking-wider block mb-3 text-[11px]">
                 Market Intelligence
               </span>
-              <ul className="space-y-1.5 text-stone-500 dark:text-stone-400">
+              <ul className="space-y-2 text-stone-500 dark:text-stone-400">
                 <li>
-                  <button onClick={() => setActiveTab('prices')} className="hover:text-emerald-600">
+                  <button onClick={() => setActiveTab('prices')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
                     Mandi Price Intelligence
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('compare')} className="hover:text-emerald-600">
-                    Farmgate vs Retail Spread
+                  <button onClick={() => setActiveTab('compare')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
+                    Farmgate vs Retail Spread Ledger
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('forecast')} className="hover:text-emerald-600">
+                  <button onClick={() => setActiveTab('forecast')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
                     30-Day Regression Forecast
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('calculator')} className="hover:text-emerald-600">
+                  <button onClick={() => setActiveTab('calculator')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
                     Dynamic 10% Trimming Engine
                   </button>
                 </li>
@@ -209,60 +217,60 @@ function MainApp() {
             </div>
 
             <div>
-              <span className="font-bold text-stone-900 dark:text-white uppercase tracking-wider block mb-2 text-[11px]">
+              <span className="font-bold text-stone-900 dark:text-white uppercase tracking-wider block mb-3 text-[11px]">
                 Direct Ecosystem
               </span>
-              <ul className="space-y-1.5 text-stone-500 dark:text-stone-400">
+              <ul className="space-y-2 text-stone-500 dark:text-stone-400">
                 <li>
-                  <button onClick={() => setActiveTab('sellers')} className="hover:text-emerald-600">
-                    Find Nearby Farmers
+                  <button onClick={() => setActiveTab('sellers')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
+                    Find Verified Nearby Farmers
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('schemes')} className="hover:text-emerald-600">
+                  <button onClick={() => setActiveTab('schemes')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
                     PM-KISAN & Welfare Schemes
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('weather')} className="hover:text-emerald-600">
+                  <button onClick={() => setActiveTab('weather')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
                     Agro-Meteorological Forecast
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('expert')} className="hover:text-emerald-600">
-                    ICAR Specialist Advice
+                  <button onClick={() => setActiveTab('expert')} className="hover:text-stone-900 dark:hover:text-white transition-colors">
+                    ICAR Specialist Consultations
                   </button>
                 </li>
               </ul>
             </div>
 
             <div>
-              <span className="font-bold text-stone-900 dark:text-white uppercase tracking-wider block mb-2 text-[11px]">
-                Trust & Verification
+              <span className="font-bold text-stone-900 dark:text-white uppercase tracking-wider block mb-3 text-[11px]">
+                Integrity & Governance
               </span>
-              <p className="text-stone-500 dark:text-stone-400 text-xs mb-3">
-                Kisan Credit Card (KCC) and land record verification ensure only authentic farmgate data guides community decisions.
+              <p className="text-stone-500 dark:text-stone-400 text-xs mb-3 leading-relaxed">
+                Kisan Credit Card (KCC) and land record verification ensure only authentic agricultural data guides community price discovery.
               </p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveTab('leaderboard')}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-semibold"
+                  className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-medium hover:border-stone-400 transition-colors"
                 >
-                  🏆 Leaderboard
+                  Reputation Leaderboard
                 </button>
                 <button
                   onClick={() => setActiveTab('rewards')}
-                  className="px-3 py-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold"
+                  className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-medium hover:border-stone-400 transition-colors"
                 >
-                  🎁 Rewards
+                  Producer Incentives
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-stone-100 dark:border-stone-800 flex flex-wrap items-center justify-between text-stone-400 text-[11px]">
-            <span>© 2026 PriceXact Platform • Built for Fair Agricultural Markets</span>
-            <span>Trimming Algorithm: 10% Outlier Removal • Mean & Std Dev • Linear Regression</span>
+          <div className="mt-10 pt-6 border-t border-stone-100 dark:border-stone-800 flex flex-wrap items-center justify-between text-stone-400 text-[11px] gap-2">
+            <span>© 2026 PriceXact Network • National Agricultural Price Intelligence</span>
+            <span className="font-mono">Econometric Specification: 10% Tail Truncation • OLS Regression</span>
           </div>
         </div>
       </footer>

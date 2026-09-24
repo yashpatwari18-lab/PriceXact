@@ -3,25 +3,62 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1c1917;
+    background-color: #FAF9F5;
   }
-  code, pre {
+  .dark body {
+    color: #F5F5F4;
+    background-color: #0D110F;
+  }
+  h1, h2, h3, .font-serif {
+    font-family: 'Fraunces', Georgia, serif;
+    font-feature-settings: 'opsz' 36;
+  }
+  code, pre, .font-mono {
     font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-/* Custom scrollbars for clean UI */
+/* Subtle architectural borders and elevation */
+.hairline-border {
+  border: 1px solid rgba(28, 25, 23, 0.08);
+}
+.dark .hairline-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Refined scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.25);
+  background: rgba(120, 113, 108, 0.2);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.45);
+  background: rgba(120, 113, 108, 0.4);
 }
+
+/* Commodity Ticker horizontal animation */
+@keyframes ticker {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+.animate-ticker {
+  display: flex;
+  width: 200%;
+  animation: ticker 40s linear infinite;
+}
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
 

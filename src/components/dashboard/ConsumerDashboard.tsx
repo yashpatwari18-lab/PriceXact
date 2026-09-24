@@ -37,37 +37,37 @@ export const ConsumerDashboard: React.FC<ConsumerDashboardProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-amber-700 via-orange-800 to-emerald-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
-        <div className="relative z-10 space-y-2">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl p-6 sm:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-md">
-              🛒 Consumer Price Intelligence
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+              Consumer Market Intelligence
             </span>
-            <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-200 bg-amber-950/80 px-2.5 py-0.5 rounded-full border border-amber-500/40">
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 dark:text-amber-400">
               <ShieldCheck className="w-3.5 h-3.5" />
               Verified Consumer
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
             Welcome back, {currentUser.name}
           </h1>
 
-          <p className="text-xs sm:text-sm text-amber-100 max-w-2xl leading-relaxed">
-            Location: {currentUser.location.district}, {currentUser.location.state} • Check fair retail price benchmarks and buy directly from nearby harvest yards.
+          <p className="text-xs text-stone-500 dark:text-stone-400 max-w-xl">
+            Location: {currentUser.location.district}, {currentUser.location.state} · Track prevailing retail grocery benchmarks and buy directly from nearby growers.
           </p>
         </div>
 
         {/* Trust Score */}
-        <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center min-w-[150px] relative z-10">
-          <span className="text-[11px] font-semibold text-amber-200 uppercase tracking-wider block">
+        <div className="bg-stone-50 dark:bg-stone-800 p-4 rounded-xl border border-stone-200/80 dark:border-stone-700 text-center min-w-[140px]">
+          <span className="text-[11px] font-medium text-stone-500 uppercase tracking-wider block">
             {t.trustScore}
           </span>
-          <div className="text-4xl font-black text-white mt-1">
+          <div className="font-mono text-3xl font-bold text-stone-900 dark:text-white mt-0.5 tabular-nums">
             {currentUser.trustScore}
-            <span className="text-xs font-normal text-amber-200 ml-1">/100</span>
+            <span className="text-xs font-normal text-stone-400 ml-0.5">/100</span>
           </div>
-          <span className="text-[10px] text-amber-300 mt-1 block">
+          <span className="text-[10px] text-amber-700 dark:text-amber-400 font-semibold mt-0.5 block">
             ⭐ Price Verifier
           </span>
         </div>
@@ -77,34 +77,34 @@ export const ConsumerDashboard: React.FC<ConsumerDashboardProps> = ({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <button
           onClick={openSubmitModal}
-          className="p-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 text-left"
+          className="p-3.5 bg-[#143828] hover:bg-[#1E5136] text-white rounded-xl font-medium text-xs shadow-2xs transition-colors flex items-center justify-center gap-2"
         >
-          <PlusCircle className="w-5 h-5" />
-          <span>Submit Retail Purchase Rate</span>
+          <PlusCircle className="w-4 h-4" />
+          <span>Submit Purchase Price</span>
         </button>
 
         <button
           onClick={onNavigateToSellers}
-          className="p-4 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-emerald-500 rounded-2xl font-bold text-xs transition-all flex items-center justify-center gap-2"
+          className="p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-stone-400 rounded-xl font-medium text-xs transition-colors flex items-center justify-center gap-2"
         >
-          <MapPin className="w-5 h-5 text-emerald-600" />
+          <MapPin className="w-4 h-4 text-stone-500" />
           <span>Find Nearby Farmers</span>
         </button>
 
         <button
           onClick={onNavigateToCompare}
-          className="p-4 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-emerald-500 rounded-2xl font-bold text-xs transition-all flex items-center justify-center gap-2"
+          className="p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-stone-400 rounded-xl font-medium text-xs transition-colors flex items-center justify-center gap-2"
         >
-          <Scale className="w-5 h-5 text-emerald-600" />
-          <span>Check Price Markups</span>
+          <Scale className="w-4 h-4 text-stone-500" />
+          <span>Intermediary Markups</span>
         </button>
 
         <button
           onClick={() => onNavigateToPrices()}
-          className="p-4 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-emerald-500 rounded-2xl font-bold text-xs transition-all flex items-center justify-center gap-2"
+          className="p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-stone-400 rounded-xl font-medium text-xs transition-colors flex items-center justify-center gap-2"
         >
-          <TrendingDown className="w-5 h-5 text-emerald-600" />
-          <span>Today's Price Drops</span>
+          <TrendingDown className="w-4 h-4 text-stone-500" />
+          <span>Commodity Price Drops</span>
         </button>
       </div>
 

@@ -7,15 +7,13 @@ import {
   Filter,
   TrendingUp,
   TrendingDown,
-  Minus,
   ShieldCheck,
-  Calendar,
-  MapPin,
-  Bell,
   Scale,
-  Sparkles,
   ArrowRight,
   Info,
+  Calendar,
+  MapPin,
+  CheckCircle2,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -52,7 +50,7 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
 
   const selectedCrop = crops.find((c) => c.id === selectedCropId) || crops[0];
 
-  // Filter crops for selector list
+  // Filter crops for selector
   const filteredCrops = useMemo(() => {
     return crops.filter((c) => {
       const matchText =
@@ -64,7 +62,7 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
     });
   }, [crops, searchQuery, filterCategory]);
 
-  // Aggregate prices for selected crop
+  // Aggregate submissions for selected crop & market
   const cropSubmissions = useMemo(() => {
     return submissions.filter((s) => {
       const matchCrop = s.cropId === selectedCropId;
@@ -97,7 +95,6 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
   const retailPrice = Number((consumerStats.mean).toFixed(2));
   const priceGap = Number((retailPrice - farmerStats.mean).toFixed(2));
   const priceGapPercent = farmerStats.mean > 0 ? Number(((priceGap / farmerStats.mean) * 100).toFixed(1)) : 0;
-
   const confidenceScore = getConfidenceScore(cropSubmissions.length, farmerStats.stdDev, farmerStats.mean);
 
   // Generate 14-day historical trend data points
@@ -111,7 +108,6 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
       d.setDate(d.getDate() - i);
       const dateLabel = d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
 
-      // Deterministic realistic variance
       const wobble = Math.sin(i * 0.7) * (baseFarmer * 0.04);
       const fPrice = Number((baseFarmer - wobble).toFixed(2));
       const cPrice = Number((baseConsumer - wobble * 1.2).toFixed(2));
@@ -128,42 +124,38 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
   }, [farmerStats.mean, consumerStats.mean]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Top Search & Filter Bar */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl p-4 sm:p-5 border border-stone-200 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div className="flex-1 min-w-[240px] relative">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t.searchPlaceholder}
-            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white"
+            placeholder="Search commodities (Wheat, Paddy, Potato, Tomato, Onion...)"
+            className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/60 text-stone-900 dark:text-white placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-[#143828]"
           />
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1.5 text-xs text-stone-500">
-            <Filter className="w-3.5 h-3.5" />
-            <span>Category:</span>
-          </div>
+        <div className="flex items-center gap-2.5 flex-wrap">
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="text-xs p-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200"
+            className="text-xs py-2 px-3 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200 focus:outline-none"
           >
-            <option value="all">All Crops</option>
+            <option value="all">All Commodity Groups</option>
             <option value="cereal">Cereals & Grains</option>
-            <option value="vegetable">Vegetables</option>
-            <option value="oilseed">Oilseeds</option>
+            <option value="vegetable">Perishable Vegetables</option>
+            <option value="oilseed">Oilseeds & Pulses</option>
           </select>
 
           <select
             value={selectedMarketId}
             onChange={(e) => setSelectedMarketId(e.target.value)}
-            className="text-xs p-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200"
+            className="text-xs py-2 px-3 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200 focus:outline-none"
           >
-            <option value="all">All Mandis & Markets</option>
+            <option value="all">All Regional Mandis & APMCs</option>
             {markets.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.name} ({m.district})
@@ -173,14 +165,14 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
 
           <button
             onClick={openSubmitModal}
-            className="text-xs font-semibold px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs transition-colors"
+            className="text-xs font-semibold px-4 py-2 bg-[#143828] hover:bg-[#1B543A] text-white rounded-lg shadow-xs transition-colors whitespace-nowrap"
           >
-            + Submit Today's Price
+            + Report Market Rate
           </button>
         </div>
       </div>
 
-      {/* Crop Pills Slider */}
+      {/* Commodity Selector Segmented Bar */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {filteredCrops.map((c) => {
           const isSelected = c.id === selectedCropId;
@@ -188,149 +180,131 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
             <button
               key={c.id}
               onClick={() => setSelectedCropId(c.id)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-2 transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap flex items-center gap-2 transition-all border ${
                 isSelected
-                  ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/20 scale-[1.02]'
-                  : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:border-emerald-400'
+                  ? 'bg-[#143828] text-white border-[#143828] shadow-xs font-semibold'
+                  : 'bg-white dark:bg-stone-800/80 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-stone-400'
               }`}
             >
-              <span>{c.icon}</span>
               <span>{c.name.split(' ')[0]}</span>
+              <span className="text-[10px] text-stone-400 font-mono">₹{c.baseReferencePrice}/kg</span>
             </button>
           );
         })}
       </div>
 
-      {/* Selected Commodity Hero Card */}
-      <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+      {/* Selected Commodity Hero Details Card */}
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-6 sm:p-8 border border-stone-200/80 dark:border-stone-800 shadow-sm space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-stone-100 dark:border-stone-800 pb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-3xl shadow-xs border border-emerald-100 dark:border-emerald-900">
-              {selectedCrop.icon}
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-white">
+                {selectedCrop.name}
+              </h1>
+              <span className="text-xs text-stone-400 font-normal">
+                ({selectedCrop.hindiName} · {selectedCrop.bengaliName})
+              </span>
             </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white">
-                  {selectedCrop.name}
-                </h1>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
-                  {selectedCrop.hindiName}
-                </span>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
-                  {selectedCrop.bengaliName}
-                </span>
-              </div>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 max-w-xl">
-                {selectedCrop.description} • Standard Unit: {selectedCrop.defaultUnit}
-              </p>
-            </div>
+            <p className="text-xs text-stone-500 dark:text-stone-400 max-w-xl">
+              {selectedCrop.description} · Benchmark Variety: {selectedCrop.variety} · Unit: ₹/kg
+            </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 border ${
-                confidenceScore === 'High'
-                  ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-                  : confidenceScore === 'Medium'
-                  ? 'bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-                  : 'bg-stone-50 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-300'
-              }`}
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              {confidenceScore} Confidence Intelligence
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1.5 font-medium">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>{confidenceScore} Confidence Index</span>
             </span>
 
             <button
               onClick={() => onNavigateToForecast(selectedCrop.id)}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 transition-colors flex items-center gap-1"
+              className="px-3.5 py-2 rounded-lg text-xs font-semibold bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center gap-1.5"
             >
-              <span>View 30-Day Forecast</span>
+              <span>30-Day Forecast</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* 4-Column Price Comparison Grid (Farmer, Consumer, Wholesale, Reference) */}
+        {/* 4 Key Metric Tiles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Farmer Farmgate Price */}
-          <div className="bg-emerald-50/60 dark:bg-emerald-950/30 p-5 rounded-2xl border border-emerald-200 dark:border-emerald-800/60 relative overflow-hidden">
-            <div className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+          {/* Farmgate Producer Price */}
+          <div className="bg-stone-50/70 dark:bg-stone-800/40 p-5 rounded-xl border border-stone-200/80 dark:border-stone-700/80 space-y-1">
+            <div className="text-[11px] font-semibold text-[#143828] dark:text-emerald-400 uppercase tracking-wider">
               {t.farmerSellingPrice}
             </div>
-            <div className="text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 mt-1">
+            <div className="font-mono text-3xl font-bold text-stone-900 dark:text-white tabular-nums">
               ₹{farmerStats.mean}
-              <span className="text-xs font-normal text-stone-500 ml-1">/kg</span>
+              <span className="text-xs font-normal text-stone-400 ml-1">/kg</span>
             </div>
-            <div className="flex items-center gap-1.5 mt-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+            <div className="flex items-center gap-1.5 pt-1 text-xs font-medium text-stone-600 dark:text-stone-300 font-mono tabular-nums">
               {farmerStats.fluctuationRate >= 0 ? (
-                <>
-                  <TrendingUp className="w-3.5 h-3.5" />
-                  <span>+{farmerStats.fluctuationRate}% (48h)</span>
-                </>
+                <span className="text-[#143828] dark:text-emerald-400 flex items-center gap-0.5">
+                  <TrendingUp className="w-3.5 h-3.5" /> +{farmerStats.fluctuationRate}% (48h)
+                </span>
               ) : (
-                <>
-                  <TrendingDown className="w-3.5 h-3.5" />
-                  <span>{farmerStats.fluctuationRate}%</span>
-                </>
+                <span className="text-rose-600 flex items-center gap-0.5">
+                  <TrendingDown className="w-3.5 h-3.5" /> {farmerStats.fluctuationRate}%
+                </span>
               )}
-              <span className="text-[10px] text-stone-500 ml-auto font-normal">
-                Trimmed σ: ±₹{farmerStats.stdDev}
+              <span className="text-[10px] text-stone-400 ml-auto font-sans">
+                σ: ±₹{farmerStats.stdDev}
               </span>
             </div>
-            <span className="text-[10px] text-stone-500 dark:text-stone-400 mt-2 block">
-              Based on {farmerStats.trimmedCount} cleaned verified transactions
+            <span className="text-[10px] text-stone-400 pt-1 block font-sans">
+              Computed from {farmerStats.trimmedCount} cleaned transactions
             </span>
           </div>
 
           {/* Consumer Purchase Price */}
-          <div className="bg-amber-50/60 dark:bg-amber-950/30 p-5 rounded-2xl border border-amber-200 dark:border-amber-800/60">
-            <div className="text-[11px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+          <div className="bg-stone-50/70 dark:bg-stone-800/40 p-5 rounded-xl border border-stone-200/80 dark:border-stone-700/80 space-y-1">
+            <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
               {t.consumerPurchasePrice}
             </div>
-            <div className="text-3xl font-extrabold text-stone-900 dark:text-white mt-1">
+            <div className="font-mono text-3xl font-bold text-stone-900 dark:text-white tabular-nums">
               ₹{consumerStats.mean}
-              <span className="text-xs font-normal text-stone-500 ml-1">/kg</span>
+              <span className="text-xs font-normal text-stone-400 ml-1">/kg</span>
             </div>
-            <div className="flex items-center gap-1.5 mt-2 text-xs font-semibold text-amber-700 dark:text-amber-400">
+            <div className="flex items-center gap-1.5 pt-1 text-xs font-medium text-amber-700 dark:text-amber-400 font-mono tabular-nums">
               <TrendingUp className="w-3.5 h-3.5" />
               <span>+{consumerStats.fluctuationRate}% retail trend</span>
             </div>
-            <span className="text-[10px] text-stone-500 dark:text-stone-400 mt-2 block">
-              Neighborhood grocery & supermarket rates
+            <span className="text-[10px] text-stone-400 pt-1 block font-sans">
+              Urban supermarkets & local wet markets
             </span>
           </div>
 
-          {/* Wholesale Mandi Price */}
-          <div className="bg-stone-50 dark:bg-stone-800/60 p-5 rounded-2xl border border-stone-200 dark:border-stone-700">
-            <div className="text-[11px] font-bold text-stone-600 dark:text-stone-300 uppercase tracking-wider">
+          {/* Wholesale APMC Benchmark */}
+          <div className="bg-stone-50/70 dark:bg-stone-800/40 p-5 rounded-xl border border-stone-200/80 dark:border-stone-700/80 space-y-1">
+            <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
               {t.wholesalePrice} (APMC Yard)
             </div>
-            <div className="text-3xl font-extrabold text-stone-800 dark:text-stone-100 mt-1">
+            <div className="font-mono text-3xl font-bold text-stone-800 dark:text-stone-200 tabular-nums">
               ₹{wholesalePrice}
               <span className="text-xs font-normal text-stone-400 ml-1">/kg</span>
             </div>
-            <div className="text-xs text-stone-500 dark:text-stone-400 mt-2">
-              Auction floor avg for {selectedMarketId === 'all' ? 'major mandis' : 'selected yard'}
+            <div className="text-xs text-stone-500 pt-1 font-sans">
+              Mandi auction clearinghouse benchmark
             </div>
           </div>
 
-          {/* Price Gap Disparity Indicator */}
-          <div className="bg-stone-900 text-white p-5 rounded-2xl border border-stone-800 flex flex-col justify-between">
+          {/* Intermediary Spread */}
+          <div className="bg-[#143828] text-white p-5 rounded-xl border border-[#143828] space-y-1 flex flex-col justify-between">
             <div>
-              <div className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center justify-between">
-                <span>Intermediary Gap</span>
+              <div className="text-[11px] font-semibold text-emerald-300 uppercase tracking-wider flex items-center justify-between">
+                <span>Intermediary Spread</span>
                 <Scale className="w-3.5 h-3.5" />
               </div>
-              <div className="text-3xl font-black text-white mt-1">
+              <div className="font-mono text-3xl font-bold text-white mt-1 tabular-nums">
                 +₹{priceGap}
-                <span className="text-xs font-normal text-stone-400 ml-1">/kg</span>
+                <span className="text-xs font-normal text-emerald-200 ml-1">/kg</span>
               </div>
-              <span className="text-xs font-bold text-emerald-400 block mt-1">
-                {priceGapPercent}% Farm-to-Consumer Spread
+              <span className="text-xs font-semibold text-emerald-300 block font-mono tabular-nums mt-0.5">
+                {priceGapPercent}% Farm-to-Consumer Gap
               </span>
             </div>
-            <p className="text-[10px] text-stone-400 mt-2">
-              PriceXact direct farmer connection can save consumers up to 25% while lifting farmgate earnings.
+            <p className="text-[10px] text-emerald-200/80 mt-2 leading-relaxed">
+              PriceXact direct trading preserves producer realization while saving consumer expenditure.
             </p>
           </div>
         </div>
@@ -338,12 +312,11 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
         {/* 14-Day Price Movement Visual Chart */}
         <div className="pt-4 space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-emerald-600" />
-              14-Day Historical Movement (₹/kg)
+            <h3 className="font-serif text-base font-bold text-stone-900 dark:text-white">
+              14-Day Price Movement & Spread Dynamic (₹/kg)
             </h3>
-            <span className="text-[11px] text-stone-400">
-              Cleaned daily arithmetic trimmed averages
+            <span className="text-[11px] text-stone-400 font-mono">
+              10% Outlier-Trimmed Daily Arithmetic Mean
             </span>
           </div>
 
@@ -352,41 +325,42 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
               <AreaChart data={historicalData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorConsumer" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#d97706" stopOpacity={0.25} />
+                    <stop offset="5%" stopColor="#d97706" stopOpacity={0.15} />
                     <stop offset="95%" stopColor="#d97706" stopOpacity={0.0} />
                   </linearGradient>
                   <linearGradient id="colorFarmer" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#059669" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#143828" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#143828" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} unit="₹" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} unit="₹" />
                 <Tooltip
                   formatter={(val: any, name: any) => [
                     `₹${val}/kg`,
                     name === 'farmerPrice'
-                      ? 'Farmer Farmgate'
+                      ? 'Farmgate Selling Price'
                       : name === 'consumerPrice'
-                      ? 'Consumer Retail'
-                      : 'Wholesale APMC',
+                      ? 'Consumer Retail Price'
+                      : 'APMC Wholesale Yard',
                   ]}
                   contentStyle={{
-                    backgroundColor: '#1c1917',
-                    borderRadius: '12px',
+                    backgroundColor: '#141A17',
+                    borderRadius: '8px',
                     color: '#fff',
-                    border: 'none',
-                    fontSize: '12px',
+                    border: '1px solid #28332D',
+                    fontSize: '11px',
+                    fontFamily: 'JetBrains Mono',
                   }}
                 />
                 <Legend
                   formatter={(val) =>
                     val === 'farmerPrice'
-                      ? 'Farmer Farmgate Rate'
+                      ? 'Producer Farmgate Rate'
                       : val === 'consumerPrice'
                       ? 'Consumer Retail Rate'
-                      : 'Wholesale Mandi'
+                      : 'APMC Wholesale Benchmark'
                   }
                   wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
                 />
@@ -401,7 +375,7 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
                 <Area
                   type="monotone"
                   dataKey="wholesalePrice"
-                  stroke="#64748b"
+                  stroke="#78716c"
                   strokeDasharray="4 4"
                   strokeWidth={1.5}
                   fill="none"
@@ -409,13 +383,70 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
                 <Area
                   type="monotone"
                   dataKey="farmerPrice"
-                  stroke="#059669"
+                  stroke="#143828"
                   strokeWidth={2.5}
                   fillOpacity={1}
                   fill="url(#colorFarmer)"
                 />
               </AreaChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* High-Density Recent Submissions Ledger */}
+        <div className="pt-6 border-t border-stone-100 dark:border-stone-800 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="font-serif text-base font-bold text-stone-900 dark:text-white">
+              Recent Verified Submissions for {selectedCrop.name}
+            </h3>
+            <span className="text-[11px] text-stone-400 font-mono">
+              {cropSubmissions.length} active records in current window
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="text-[10px] uppercase tracking-wider text-stone-400 border-b border-stone-100 dark:border-stone-800">
+                  <th className="pb-2 font-medium">Participant</th>
+                  <th className="pb-2 font-medium">Mandi Location</th>
+                  <th className="pb-2 font-medium">Type</th>
+                  <th className="pb-2 text-right font-medium">Reported Price</th>
+                  <th className="pb-2 text-right font-medium">Normalized (₹/kg)</th>
+                  <th className="pb-2 text-right font-medium">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-100 dark:divide-stone-800 font-mono text-[11px] tabular-nums">
+                {cropSubmissions.slice(0, 6).map((sub) => (
+                  <tr key={sub.id} className="hover:bg-stone-50/60 dark:hover:bg-stone-800/40 transition-colors">
+                    <td className="py-2.5 font-sans font-medium text-stone-900 dark:text-white">
+                      {sub.submitterName}
+                    </td>
+                    <td className="py-2.5 text-stone-600 dark:text-stone-300">
+                      {sub.marketName}
+                    </td>
+                    <td className="py-2.5 font-sans">
+                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${
+                        sub.transactionType === 'sell'
+                          ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300'
+                          : 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300'
+                      }`}>
+                        {sub.transactionType === 'sell' ? 'Farmgate Sale' : 'Retail Purchase'}
+                      </span>
+                    </td>
+                    <td className="py-2.5 text-right text-stone-500">
+                      ₹{sub.originalPrice}/{sub.originalUnit}
+                    </td>
+                    <td className="py-2.5 text-right font-semibold text-stone-900 dark:text-white">
+                      ₹{sub.normalizedPricePerKg.toFixed(2)}/kg
+                    </td>
+                    <td className="py-2.5 text-right text-stone-400 font-sans text-[10px]">
+                      {sub.date}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
