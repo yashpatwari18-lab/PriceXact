@@ -91,25 +91,25 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0D110F]/95 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-2">
           {/* Zone 1: Distinctive Single-Element Brand Wordmark */}
           <div
             onClick={() => setActiveTab('home')}
-            className="flex items-center gap-2.5 cursor-pointer select-none group"
+            className="flex items-center gap-2 sm:gap-2.5 cursor-pointer select-none group shrink-0"
           >
             {/* Geometric Botanical Monogram */}
-            <div className="w-8 h-8 rounded-lg bg-[#143828] text-emerald-400 flex items-center justify-center font-bold text-sm tracking-tighter shadow-xs border border-emerald-900/60 transition-transform group-hover:scale-105">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#143828] text-emerald-400 flex items-center justify-center font-bold text-xs sm:text-sm tracking-tighter shadow-xs border border-emerald-900/60 transition-transform group-hover:scale-105 shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 sm:w-4 sm:h-4">
                 <path d="M12 2v20" />
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="font-serif text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50 leading-none">
+              <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50 leading-none">
                 Price<span className="text-[#1B543A] dark:text-emerald-400 font-sans font-semibold">Xact</span>
               </span>
-              <span className="text-[9px] uppercase tracking-widest text-stone-600 dark:text-stone-300 font-mono mt-0.5">
-                Agricultural Intelligence
+              <span className="text-[8px] sm:text-[9px] uppercase tracking-widest text-stone-600 dark:text-stone-300 font-mono mt-0.5 hidden xs:block">
+                Agri Intelligence
               </span>
             </div>
           </div>
@@ -164,32 +164,32 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </nav>
 
-          {/* Zone 3: 1-2 Primary Actions & Controls */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            {/* Sign In / KCC Verify Button */}
+          {/* Zone 3: Actions & Controls - Responsive & Compact */}
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Sign In / KCC Verify Button - Visible on Desktop / Tablet */}
             <button
               onClick={() => openAuthModal('login')}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold border border-stone-200 dark:border-stone-700 hover:border-stone-400 text-stone-700 dark:text-stone-200 bg-white dark:bg-stone-800 transition-colors whitespace-nowrap shadow-2xs"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-stone-200 dark:border-stone-700 hover:border-stone-400 text-stone-700 dark:text-stone-200 bg-white dark:bg-stone-800 transition-colors whitespace-nowrap shadow-2xs"
               title="Sign In with Credentials or Verify KCC & Khatian Land Records"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#143828] dark:text-emerald-400" />
               <span>Sign In / KCC</span>
             </button>
 
-            {/* Primary Action: Submit Price */}
+            {/* Primary Action: Submit Price - Desktop / Tablet */}
             <button
               onClick={openSubmitModal}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#143828] hover:bg-[#1B543A] text-white shadow-xs transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#143828] hover:bg-[#1B543A] text-white shadow-xs transition-colors whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Submit Market Rate</span>
             </button>
 
-            {/* Language Selector Dropdown */}
-            <div className="relative">
+            {/* Language Selector Dropdown - Desktop / Tablet */}
+            <div className="hidden sm:block relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="p-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg flex items-center gap-1 text-xs font-medium transition-colors"
+                className="p-1.5 sm:p-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg flex items-center gap-1 text-xs font-medium transition-colors"
                 title="Select Language"
               >
                 <Globe className="w-3.5 h-3.5 text-stone-400" />
@@ -226,17 +226,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+              className="p-1.5 sm:p-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors shrink-0"
               title="Toggle Dark Mode"
             >
               {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            {/* Notifications Bell */}
-            <div className="relative">
+            {/* Notifications Bell - Desktop / Tablet */}
+            <div className="hidden sm:block relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="relative p-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                className="relative p-1.5 sm:p-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
                 title="Notifications"
               >
                 <Bell className="w-4 h-4" />

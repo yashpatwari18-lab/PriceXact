@@ -88,9 +88,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="pb-16 sm:pb-24">
+    <div className="pb-16 sm:pb-24 w-full max-w-full overflow-x-hidden">
       {/* 1. Live APMC Mandi Commodities Ticker Strip */}
-      <div className="w-full bg-stone-50/90 dark:bg-[#111714] text-stone-700 dark:text-stone-300 border-b border-stone-200/80 dark:border-stone-800/80 overflow-hidden py-2 text-xs select-none transition-colors">
+      <div className="w-full max-w-full bg-stone-50/90 dark:bg-[#111714] text-stone-700 dark:text-stone-300 border-b border-stone-200/80 dark:border-stone-800/80 overflow-hidden py-2 text-xs select-none transition-colors">
         <div className="flex animate-ticker whitespace-nowrap">
           {[...tickerItems, ...tickerItems].map((item, idx) => (
             <div key={idx} className="inline-flex items-center gap-2 px-6 border-r border-stone-200/80 dark:border-stone-800/80">
@@ -147,30 +147,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             {/* Quantitative Proof Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-stone-200 dark:border-stone-800">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-6 border-t border-stone-200 dark:border-stone-800">
               <div>
-                <div className="font-mono text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-white tabular-nums">
+                <div className="font-mono text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-stone-900 dark:text-white tabular-nums">
                   12,480+
                 </div>
-                <div className="text-[11px] text-stone-500 font-medium mt-0.5">Verified Farmers</div>
+                <div className="text-[10px] sm:text-[11px] text-stone-500 font-medium mt-0.5">Verified Farmers</div>
               </div>
               <div>
-                <div className="font-mono text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-white tabular-nums">
+                <div className="font-mono text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-stone-900 dark:text-white tabular-nums">
                   420+
                 </div>
-                <div className="text-[11px] text-stone-500 font-medium mt-0.5">Mandis Aggregated</div>
+                <div className="text-[10px] sm:text-[11px] text-stone-500 font-medium mt-0.5">Mandis Aggregated</div>
               </div>
               <div>
-                <div className="font-mono text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-white tabular-nums">
+                <div className="font-mono text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-stone-900 dark:text-white tabular-nums">
                   1,850+
                 </div>
-                <div className="text-[11px] text-stone-500 font-medium mt-0.5">Daily Ledger Entries</div>
+                <div className="text-[10px] sm:text-[11px] text-stone-500 font-medium mt-0.5">Daily Ledger Entries</div>
               </div>
               <div>
-                <div className="font-mono text-2xl sm:text-3xl font-bold tracking-tight text-[#143828] dark:text-emerald-400 tabular-nums">
+                <div className="font-mono text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#143828] dark:text-emerald-400 tabular-nums">
                   10%
                 </div>
-                <div className="text-[11px] text-stone-500 font-medium mt-0.5">Trimming Truncation</div>
+                <div className="text-[10px] sm:text-[11px] text-stone-500 font-medium mt-0.5">Trimming Truncation</div>
               </div>
             </div>
           </div>

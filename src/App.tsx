@@ -58,7 +58,7 @@ function MainApp() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors pb-16 lg:pb-0">
+    <div className="min-h-screen flex flex-col bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors pb-16 lg:pb-0 overflow-x-hidden w-full max-w-full">
       {/* Main Responsive Header */}
       <Navbar
         activeTab={activeTab}
@@ -68,7 +68,7 @@ function MainApp() {
       />
 
       {/* Main View Container */}
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full overflow-x-hidden">
         {activeTab === 'home' && (
           <LandingPage
             onCheckPrices={() => navigateToPrices()}
