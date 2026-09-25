@@ -18,9 +18,9 @@ export const PriceAlertsPage: React.FC = () => {
   const markets = storage.getState().markets;
   const alerts = storage.getState().alerts.filter((a) => a.userId === currentUser.id);
 
-  const [cropId, setCropId] = useState(crops[0]?.id || 'crop_wheat');
-  const [marketId, setMarketId] = useState(markets[0]?.id || 'mkt_azadpur');
-  const [targetPrice, setTargetPrice] = useState<number | ''>(22);
+  const [cropId, setCropId] = useState(crops[0]?.id || 'crop_potato');
+  const [marketId, setMarketId] = useState(markets[0]?.id || 'mkt_kol_sealdah');
+  const [targetPrice, setTargetPrice] = useState<number | ''>(17);
   const [condition, setCondition] = useState<'below' | 'above'>('below');
   const [notifyMethod, setNotifyMethod] = useState<'in-app' | 'push' | 'sms'>('in-app');
 

@@ -2,6 +2,8 @@ export type UserRole = 'farmer' | 'consumer' | 'expert' | 'trader' | 'admin';
 
 export type VerificationStatus = 'verified' | 'temporary' | 'flagged' | 'banned';
 
+export type DataStatus = 'VERIFIED' | 'SAMPLE_DEMO' | 'COMMUNITY_SUBMITTED' | 'OFFICIAL' | 'UNAVAILABLE';
+
 export interface User {
   id: string;
   name: string;
@@ -12,9 +14,22 @@ export interface User {
     state: string;
     district: string;
     villageOrTown: string;
+    locality?: string;
     lat?: number;
     lng?: number;
   };
+  currentDetectedLocation?: {
+    state: string;
+    district: string;
+    locality?: string;
+    lat?: number;
+    lng?: number;
+    source?: 'geolocation' | 'ip_approximate' | 'manual';
+    detectedAt?: string;
+  };
+  locationRisk?: 'low' | 'medium' | 'high';
+  manualReviewRequired?: boolean;
+  locationMismatchReason?: string;
   verificationStatus: VerificationStatus;
   trustScore: number;
   accuracyRate: number;
@@ -41,22 +56,33 @@ export interface Crop {
   variety?: string;
   defaultUnit: string;
   baseReferencePrice: number; // in Rs/kg
+  minPrice?: number;
+  maxPrice?: number;
+  modalPrice?: number;
   season: string;
   description: string;
+  dataStatus?: DataStatus;
 }
 
-export type MarketType = 'mandi' | 'apmc' | 'retail' | 'cooperative' | 'farmer_market';
+export type MarketType = 'mandi' | 'apmc' | 'retail' | 'cooperative' | 'farmer_market' | 'wholesale';
 
 export interface Market {
   id: string;
   name: string;
   district: string;
   state: string;
+  locality?: string;
   type: MarketType;
   distanceKm?: number;
   lat: number;
   lng: number;
   address: string;
+  dataStatus: DataStatus;
+  lastUpdated: string;
+  availableCrops?: string[];
+  contactPerson?: string;
+  openingHours?: string;
+  modalPriceSummary?: Record<string, number>; // cropId -> modal price in Rs/kg
 }
 
 export type UnitType = '₹/kg' | '₹/quintal' | '₹/ton' | '₹/piece' | '₹/litre';
@@ -289,4 +315,54 @@ export interface SellerProfile {
   }[];
   phoneMasked: string;
   directPickupAvailable: boolean;
+}
+
+export type ActivityTimeframe = '1h' | '6h' | '12h' | '24h' | '7d';
+
+export interface ActivityPoint {
+  timestamp: string;
+  label: string;
+  activeUsers: number;
+  farmers: number;
+  consumers: number;
+  traders: number;
+}
+
+export interface LiveUserMetrics {
+  currentActiveUsers: number;
+  farmersOnline: number;
+  consumersOnline: number;
+  tradersOnline: number;
+  timeframe: ActivityTimeframe;
+  history: ActivityPoint[];
+  isDemoData: boolean;
+  dataStatus: DataStatus;
+}
+
+export interface LocationVerificationQueueItem {
+  id: string;
+  userId: string;
+  userName: string;
+  declaredState: string;
+  declaredDistrict: string;
+  declaredVillage: string;
+  detectedRegion: string;
+  detectedState: string;
+  detectedDistrict: string;
+  detectedLocality?: string;
+  distanceKm: number;
+  riskReason: string;
+  riskLevel: 'medium' | 'high';
+  status: 'pending' | 'verified' | 'dismissed' | 'manual_review';
+  flaggedAt: string;
+  kccNumber?: string;
+  khatianNumber?: string;
+}
+
+export interface StateDistrictHierarchy {
+  state: string;
+  districts: {
+    district: string;
+    localities?: string[];
+  }[];
 }

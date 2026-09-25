@@ -172,7 +172,7 @@ export const ConsumerDashboard: React.FC<ConsumerDashboardProps> = ({
                 </div>
 
                 <div className="pt-2 border-t border-stone-100 dark:border-stone-800 text-[10px] text-stone-400 flex justify-between">
-                  <span>Mandi: Azadpur APMC</span>
+                  <span>Mandi: Sealdah Koley & Gariahat</span>
                   <span>Std: ±₹{cStats.stdDev}</span>
                 </div>
               </div>

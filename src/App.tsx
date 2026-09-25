@@ -181,7 +181,7 @@ function MainApp() {
                 National agricultural price intelligence network designed to eliminate market information asymmetry through statistical normalization and 10% outlier-trimmed price equilibrium.
               </p>
               <div className="text-[11px] text-stone-400 pt-1 font-mono">
-                Clearinghouse Mandis: Meerut, Azadpur, Lasalgaon, Vashi, Kolar
+                Clearinghouse Mandis: Sealdah Koley, Posta, Howrah, Siliguri, Azadpur, Lasalgaon
               </div>
             </div>
 

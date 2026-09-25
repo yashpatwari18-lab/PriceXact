@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { storage } from '../../services/storageService';
 import { calculateTrimmedStats } from '../../services/calculationEngine';
+import { LiveActivityGraph } from '../common/LiveActivityGraph';
 import {
   ArrowRight,
   ShieldCheck,
@@ -77,14 +78,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   // Ticker data across 6 commodities
   const tickerItems = [
-    { name: 'Wheat (Lokwan)', mandi: 'Meerut APMC', price: '₹22.80/kg', change: '+1.2%', up: true },
-    { name: 'Basmati Paddy', mandi: 'Karnal Mandi', price: '₹34.50/kg', change: '-0.4%', up: false },
-    { name: 'Potato (Jyoti)', mandi: 'Agra Yard', price: '₹14.20/kg', change: '+2.1%', up: true },
-    { name: 'Onion (Nasik Red)', mandi: 'Lasalgaon APMC', price: '₹26.40/kg', change: '-3.2%', up: false },
-    { name: 'Tomato (Hybrid)', mandi: 'Kolar Mandi', price: '₹20.00/kg', change: '+0.8%', up: true },
-    { name: 'Maize (Yellow)', mandi: 'Chhindwara', price: '₹19.50/kg', change: '+0.0%', up: true },
-    { name: 'Soybean (Yellow)', mandi: 'Indore Mandi', price: '₹46.20/kg', change: '+1.5%', up: true },
-    { name: 'Cotton (Medium)', mandi: 'Rajkot APMC', price: '₹62.00/kg', change: '-0.8%', up: false },
+    { name: 'Jyoti Potato', mandi: 'Sealdah Koley Market', price: '₹15.80/kg', change: '+1.2%', up: true },
+    { name: 'Minikit / Swarna Rice', mandi: 'Burdwan Mandi', price: '₹28.50/kg', change: '+0.8%', up: true },
+    { name: 'Wheat (Sharbati)', mandi: 'Posta Burrabazar', price: '₹25.20/kg', change: '+0.5%', up: true },
+    { name: 'Onion (Nasik Red)', mandi: 'Mechua Wholesale', price: '₹26.00/kg', change: '-2.4%', up: false },
+    { name: 'Tomato (Hybrid)', mandi: 'Howrah Terminal', price: '₹22.00/kg', change: '+1.4%', up: true },
+    { name: 'Mustard Seeds', mandi: 'Nadia Krishnanagar', price: '₹54.00/kg', change: '+0.0%', up: true },
+    { name: 'Pointed Gourd (Potol)', mandi: 'Singur Hooghly', price: '₹38.00/kg', change: '+2.1%', up: true },
+    { name: 'Ginger (Fresh)', mandi: 'Siliguri Regulated', price: '₹68.00/kg', change: '-1.1%', up: false },
   ];
 
   return (
@@ -530,6 +531,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
+      {/* Live Market Activity & User Telemetry Graph */}
+      <section className="max-w-7xl mx-auto px-3 sm:px-6">
+        <LiveActivityGraph />
+      </section>
+
       {/* 5. Algorithmic Price Intelligence Pipeline */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6">
         <div className="border border-stone-200/80 dark:border-stone-800 rounded-2xl bg-white dark:bg-[#141A17] p-5 sm:p-8 md:p-12 shadow-xs space-y-6 sm:space-y-8">
@@ -604,18 +610,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
               <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed italic">
-                "Before PriceXact, commission agents at Meerut Mandi quoted ₹18/kg for Sharbati wheat when wholesale was trading at ₹24/kg. Checking the trimmed benchmark on my phone gave me the leverage to demand ₹22.50/kg."
+                "Before PriceXact, commission agents at Sealdah Koley Market quoted ₹11/kg for Jyoti potatoes when wholesale was trading at ₹16/kg. Checking the trimmed benchmark on my phone gave me the leverage to demand ₹15.50/kg."
               </p>
               <div className="pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-[#143828] text-emerald-300 flex items-center justify-center font-bold text-xs">
-                  RP
+                  SM
                 </div>
                 <div>
                   <div className="text-xs font-semibold text-stone-900 dark:text-white">
-                    Rameshwar Singh Patel
+                    Subhash Chandra Mondal
                   </div>
                   <div className="text-[11px] text-stone-400">
-                    Wheat & Mustard Farmer · Meerut, UP
+                    Potato & Rice Producer · Purba Bardhaman / Sealdah
                   </div>
                 </div>
               </div>
@@ -623,7 +629,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#141A17] border border-stone-200/80 dark:border-stone-800 space-y-4">
               <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed italic">
-                "We connected with an organic potato farmer 18km outside Delhi through PriceXact. Our residential society now procures directly at ₹16/kg instead of paying ₹28/kg at local supermarkets."
+                "We connected with an organic vegetable producer in Singur through PriceXact. Our Gariahat residential society now procures directly at ₹16/kg instead of paying ₹28/kg at local retail grocery stalls."
               </p>
               <div className="pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-amber-950 text-amber-300 flex items-center justify-center font-bold text-xs">
@@ -634,7 +640,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     Priya Mukherjee
                   </div>
                   <div className="text-[11px] text-stone-400">
-                    Community Purchasing Lead · South Delhi
+                    Consumer Cooperative Lead · South Kolkata (Gariahat)
                   </div>
                 </div>
               </div>

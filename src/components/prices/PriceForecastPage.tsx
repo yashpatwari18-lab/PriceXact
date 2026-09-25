@@ -38,8 +38,8 @@ export const PriceForecastPage: React.FC<PriceForecastPageProps> = ({
   const markets = storage.getState().markets;
   const submissions = storage.getState().submissions;
 
-  const [selectedCropId, setSelectedCropId] = useState<string>(initialCropId || crops[0]?.id || 'crop_wheat');
-  const [selectedMarketId, setSelectedMarketId] = useState<string>(markets[0]?.id || 'mkt_azadpur');
+  const [selectedCropId, setSelectedCropId] = useState<string>(initialCropId || crops[0]?.id || 'crop_potato');
+  const [selectedMarketId, setSelectedMarketId] = useState<string>(markets[0]?.id || 'mkt_kol_sealdah');
   const [forecastDays, setForecastDays] = useState<7 | 14 | 30>(14);
 
   const selectedCrop = crops.find((c) => c.id === selectedCropId) || crops[0];

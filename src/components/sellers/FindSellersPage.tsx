@@ -162,7 +162,7 @@ export const FindSellersPage: React.FC = () => {
             {/* Visual Simulated Map Grid */}
             <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]" />
             <div className="absolute top-4 left-4 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-800 dark:text-stone-200 shadow-sm">
-              📍 Simulated Agro-Clustering Map (Meerut & Delhi-NCR Belt)
+              📍 Agro-Clustering Map (Kolkata, Howrah & Hooghly Belt)
             </div>
 
             {/* Map Markers for sellers */}

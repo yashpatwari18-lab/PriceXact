@@ -29,21 +29,32 @@ interface PriceComparisonPageProps {
 
 export const PriceComparisonPage: React.FC<PriceComparisonPageProps> = ({ openSubmitModal }) => {
   const crops = storage.getState().crops;
+  const markets = storage.getState().markets;
   const submissions = storage.getState().submissions;
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedMarketId, setSelectedMarketId] = useState<string>('mkt_kol_sealdah');
+
+  const selectedMarket = markets.find((m) => m.id === selectedMarketId);
 
   // Compute comparative table items
   const comparisonData = crops.map((crop) => {
-    const cropSubs = submissions.filter((s) => s.cropId === crop.id);
+    // Filter submissions if a specific market is chosen
+    const cropSubs = submissions.filter(
+      (s) => s.cropId === crop.id && (selectedMarketId === 'all' || s.marketId === selectedMarketId)
+    );
+
+    // If market has specific modal price summary, use it as baseline
+    const marketModal = selectedMarket?.modalPriceSummary?.[crop.id];
+    const cropBase = marketModal || crop.baseReferencePrice;
 
     const fPrices = cropSubs.filter((s) => s.transactionType === 'sell').map((s) => s.normalizedPricePerKg);
     const fStats = calculateTrimmedStats(
-      fPrices.length > 0 ? fPrices : [crop.baseReferencePrice * 0.95, crop.baseReferencePrice, crop.baseReferencePrice * 1.05],
-      crop.baseReferencePrice
+      fPrices.length > 0 ? fPrices : [cropBase * 0.95, cropBase, cropBase * 1.05],
+      cropBase
     );
 
     const cPrices = cropSubs.filter((s) => s.transactionType === 'buy').map((s) => s.normalizedPricePerKg);
-    const cBaseline = crop.baseReferencePrice * 1.45;
+    const cBaseline = cropBase * 1.45;
     const cStats = calculateTrimmedStats(
       cPrices.length > 0 ? cPrices : [cBaseline * 0.95, cBaseline, cBaseline * 1.05],
       cBaseline
@@ -51,7 +62,7 @@ export const PriceComparisonPage: React.FC<PriceComparisonPageProps> = ({ openSu
 
     const farmerPrice = fStats.mean;
     const consumerPrice = cStats.mean;
-    const wholesalePrice = Number((farmerPrice * 1.15).toFixed(2));
+    const wholesalePrice = marketModal || Number((farmerPrice * 1.15).toFixed(2));
     const difference = Number((consumerPrice - farmerPrice).toFixed(2));
     const differencePercent = farmerPrice > 0 ? Number(((difference / farmerPrice) * 100).toFixed(1)) : 0;
     const farmerShare = consumerPrice > 0 ? Number(((farmerPrice / consumerPrice) * 100).toFixed(1)) : 50;
@@ -111,21 +122,36 @@ export const PriceComparisonPage: React.FC<PriceComparisonPageProps> = ({ openSu
             </span>
           </div>
 
-          {/* Category Tabs */}
-          <div className="flex items-center gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-lg">
-            {['all', 'cereal', 'vegetable', 'oilseed'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
-                  selectedCategory === cat
-                    ? 'bg-white dark:bg-[#1C2520] text-stone-900 dark:text-white shadow-2xs font-semibold'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
-                }`}
-              >
-                {cat === 'all' ? 'All Commodities' : cat}
-              </button>
-            ))}
+          {/* Category Tabs & Mandi Selector */}
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={selectedMarketId}
+              onChange={(e) => setSelectedMarketId(e.target.value)}
+              className="text-xs py-1.5 px-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-medium"
+            >
+              <option value="all">National Baseline (All India)</option>
+              {markets.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name} ({m.district})
+                </option>
+              ))}
+            </select>
+
+            <div className="flex items-center gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-lg">
+              {['all', 'cereal', 'vegetable', 'oilseed'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
+                    selectedCategory === cat
+                      ? 'bg-white dark:bg-[#1C2520] text-stone-900 dark:text-white shadow-2xs font-semibold'
+                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                  }`}
+                >
+                  {cat === 'all' ? 'All Commodities' : cat}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

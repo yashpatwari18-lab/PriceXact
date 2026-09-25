@@ -56,21 +56,21 @@ export const Navbar: React.FC<NavbarProps> = ({
     .slice(0, 5);
 
   const primaryNavLinks = [
-    { id: 'home', label: 'Overview' },
-    { id: 'prices', label: 'Market Prices' },
-    { id: 'compare', label: 'Spread Ledger' },
-    { id: 'forecast', label: 'Forecast' },
-    { id: 'sellers', label: 'Direct Sellers' },
+    { id: 'home', label: t.navHome || 'Overview' },
+    { id: 'prices', label: t.navPrices || 'Market Prices' },
+    { id: 'compare', label: t.navCompare || 'Spread Ledger' },
+    { id: 'forecast', label: t.navForecast || 'Forecast' },
+    { id: 'sellers', label: t.navFarmers || 'Direct Sellers' },
   ];
 
   const secondaryNavLinks = [
-    { id: 'dashboard', label: currentUser.role === 'farmer' ? 'Producer Console' : 'Consumer Console' },
-    { id: 'calculator', label: '10% Trimming Engine' },
-    { id: 'schemes', label: 'Government Welfare Schemes' },
-    { id: 'weather', label: 'Agro-Meteorology' },
-    { id: 'expert', label: 'Agricultural Experts Q&A' },
-    { id: 'leaderboard', label: 'Trust & Reputation Leaderboard' },
-    { id: 'rewards', label: 'Producer Incentives & Rewards' },
+    { id: 'dashboard', label: currentUser.role === 'farmer' ? (language === 'bn' ? 'কৃষক কনসোল' : language === 'hi' ? 'किसान डैशबोर्ड' : 'Producer Console') : (language === 'bn' ? 'ভোক্তা কনসোল' : language === 'hi' ? 'उपभोक्ता डैशबोर्ड' : 'Consumer Console') },
+    { id: 'calculator', label: language === 'bn' ? '১০% ট্রিমড গণনা ইঞ্জিন' : language === 'hi' ? '10% ट्रिमिंग गणना इंजन' : '10% Trimming Engine' },
+    { id: 'schemes', label: t.navSchemes || 'Government Welfare Schemes' },
+    { id: 'weather', label: t.navWeather || 'Agro-Meteorology' },
+    { id: 'expert', label: t.navExpert || 'Agricultural Experts Q&A' },
+    { id: 'leaderboard', label: t.navLeaderboard || 'Trust & Reputation Leaderboard' },
+    { id: 'rewards', label: t.navRewards || 'Producer Incentives & Rewards' },
   ];
 
   if (currentUser.role === 'admin') {
@@ -182,7 +182,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#143828] hover:bg-[#1B543A] text-white shadow-xs transition-colors whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Submit Market Rate</span>
+              <span>{t.submitPrice || 'Submit Market Rate'}</span>
             </button>
 
             {/* Language Selector Dropdown - Desktop / Tablet */}
@@ -369,10 +369,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         Switch Persona
                       </div>
                       {[
-                        { role: 'farmer', name: 'Rameshwar Singh Patel', label: 'Farmer (Meerut)' },
-                        { role: 'consumer', name: 'Priya Mukherjee', label: 'Consumer (Delhi)' },
-                        { role: 'trader', name: 'Gupta Agro Trading', label: 'APMC Trader (Azadpur)' },
-                        { role: 'expert', name: 'Dr. Virendra K. Sharma', label: 'Agronomist (ICAR)' },
+                        { role: 'farmer', name: 'Subhash Chandra Mondal', label: 'Farmer (Purba Bardhaman / Kolkata)' },
+                        { role: 'consumer', name: 'Priya Mukherjee', label: 'Consumer (Kolkata Gariahat)' },
+                        { role: 'trader', name: 'Bengal Agro Commodities', label: 'APMC Trader (Sealdah Koley)' },
+                        { role: 'expert', name: 'Dr. Virendra K. Sharma', label: 'Agronomist (ICAR / BCKV)' },
                         { role: 'admin', name: 'PriceXact Operations', label: 'Clearinghouse Admin' },
                       ].map((item) => (
                         <button
@@ -503,6 +503,81 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {item.label}
                 </button>
               ))}
+            </div>
+
+            {/* Language Selection Row for Mobile */}
+            <div className="pt-2 border-t border-stone-100 dark:border-stone-800 my-2">
+              <span className="px-3 text-[10px] font-semibold text-stone-400 uppercase tracking-wider block mb-2 flex items-center gap-1.5">
+                <Globe className="w-3 h-3 text-stone-400" />
+                Language / भाषा / ভাষা
+              </span>
+              <div className="grid grid-cols-3 gap-1.5 px-3">
+                {languages.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => setLanguage(l.code as any)}
+                    className={`py-2 px-2 text-center rounded-lg text-xs font-semibold transition-colors border ${
+                      language === l.code
+                        ? 'bg-[#143828] text-white border-[#143828] shadow-2xs'
+                        : 'bg-stone-50 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:bg-stone-100'
+                    }`}
+                  >
+                    <div>{l.label}</div>
+                    <div className={`text-[9px] ${language === l.code ? 'text-emerald-200' : 'text-stone-400'}`}>{l.sub}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Demo Persona Switcher on Mobile */}
+            <div className="pt-2 border-t border-stone-100 dark:border-stone-800 my-2 px-3">
+              <span className="text-[10px] font-semibold text-stone-400 uppercase tracking-wider block mb-2">
+                Demo Switch Persona
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    switchRole('farmer');
+                    setActiveTab('dashboard');
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-semibold text-center border transition-colors ${
+                    currentUser.role === 'farmer'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-400 font-bold'
+                      : 'border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400'
+                  }`}
+                >
+                  🌾 Producer
+                </button>
+                <button
+                  onClick={() => {
+                    switchRole('consumer');
+                    setActiveTab('dashboard');
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-semibold text-center border transition-colors ${
+                    currentUser.role === 'consumer'
+                      ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border-blue-400 font-bold'
+                      : 'border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400'
+                  }`}
+                >
+                  🛒 Consumer
+                </button>
+                <button
+                  onClick={() => {
+                    switchRole('admin');
+                    setActiveTab('admin');
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-semibold text-center border transition-colors ${
+                    currentUser.role === 'admin'
+                      ? 'bg-purple-50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300 border-purple-400 font-bold'
+                      : 'border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400'
+                  }`}
+                >
+                  ⚖️ Admin
+                </button>
+              </div>
             </div>
           </div>
         )}

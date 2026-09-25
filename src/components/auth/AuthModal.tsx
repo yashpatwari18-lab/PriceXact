@@ -39,9 +39,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
-  const [stateName, setStateName] = useState('Uttar Pradesh');
-  const [district, setDistrict] = useState('Meerut');
-  const [village, setVillage] = useState('Daurala');
+  const [stateName, setStateName] = useState('West Bengal');
+  const [district, setDistrict] = useState('Purba Bardhaman');
+  const [village, setVillage] = useState('Raina');
   const [kccId, setKccId] = useState('');
   const [khatianNumber, setKhatianNumber] = useState('');
   const [businessName, setBusinessName] = useState('');
@@ -220,9 +220,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   className="p-2 text-left rounded-lg border border-stone-200 dark:border-stone-700 hover:border-emerald-500 bg-stone-50 dark:bg-stone-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
                 >
                   <div className="font-bold text-stone-800 dark:text-stone-100 flex items-center gap-1">
-                    🌾 Farmer Rameshwar
+                    🌾 Subhash Chandra
                   </div>
-                  <span className="text-[10px] text-emerald-600">Verified KCC, 92 Trust</span>
+                  <span className="text-[10px] text-emerald-600">Verified KCC, 94 Trust (Purba Bardhaman)</span>
                 </button>
 
                 <button
@@ -233,7 +233,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <div className="font-bold text-stone-800 dark:text-stone-100 flex items-center gap-1">
                     🛒 Consumer Priya
                   </div>
-                  <span className="text-[10px] text-emerald-600">Saket Delhi, 78 Trust</span>
+                  <span className="text-[10px] text-emerald-600">Gariahat Kolkata, 82 Trust</span>
                 </button>
 
                 <button
@@ -242,9 +242,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   className="p-2 text-left rounded-lg border border-stone-200 dark:border-stone-700 hover:border-emerald-500 bg-stone-50 dark:bg-stone-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
                 >
                   <div className="font-bold text-stone-800 dark:text-stone-100 flex items-center gap-1">
-                    🏢 Trader Sanjay Gupta
+                    🏢 Bengal Agro Corp
                   </div>
-                  <span className="text-[10px] text-stone-500">Azadpur APMC Yard</span>
+                  <span className="text-[10px] text-stone-500">Sealdah Koley Market</span>
                 </button>
 
                 <button
@@ -307,7 +307,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Rameshwar Patel"
+                  placeholder="e.g. Subhash Mondal"
                   className="w-full p-2 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-white"
                 />
               </div>

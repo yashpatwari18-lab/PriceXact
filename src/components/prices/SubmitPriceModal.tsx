@@ -31,9 +31,9 @@ export const SubmitPriceModal: React.FC<SubmitPriceModalProps> = ({
   const crops = storage.getState().crops;
   const markets = storage.getState().markets;
 
-  const [cropId, setCropId] = useState(crops[0]?.id || 'crop_wheat');
-  const [marketId, setMarketId] = useState(markets[0]?.id || 'mkt_azadpur');
-  const [originalPrice, setOriginalPrice] = useState<number | ''>(24);
+  const [cropId, setCropId] = useState(crops[0]?.id || 'crop_potato');
+  const [marketId, setMarketId] = useState(markets[0]?.id || 'mkt_kol_sealdah');
+  const [originalPrice, setOriginalPrice] = useState<number | ''>(16);
   const [originalUnit, setOriginalUnit] = useState<UnitType>('₹/kg');
   const [quantity, setQuantity] = useState<number | ''>(50);
   const [transactionType, setTransactionType] = useState<'sell' | 'buy'>(
@@ -41,8 +41,8 @@ export const SubmitPriceModal: React.FC<SubmitPriceModalProps> = ({
   );
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
-  const [district, setDistrict] = useState(currentUser.location.district || 'Meerut');
-  const [state, setState] = useState(currentUser.location.state || 'Uttar Pradesh');
+  const [district, setDistrict] = useState(currentUser.location.district || 'Kolkata');
+  const [state, setState] = useState(currentUser.location.state || 'West Bengal');
   const [photoUploaded, setPhotoUploaded] = useState(false);
   const [gpsTagActive, setGpsTagActive] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);

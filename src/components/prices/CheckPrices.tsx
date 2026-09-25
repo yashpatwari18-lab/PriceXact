@@ -44,11 +44,101 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
   const submissions = storage.getState().submissions;
 
   const [selectedCropId, setSelectedCropId] = useState<string>(initialCropId || crops[0]?.id || 'crop_wheat');
+  const [selectedState, setSelectedState] = useState<string>('all');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('all');
+  const [selectedLocality, setSelectedLocality] = useState<string>('all');
   const [selectedMarketId, setSelectedMarketId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
 
   const selectedCrop = crops.find((c) => c.id === selectedCropId) || crops[0];
+
+  // Distinct available states from markets database
+  const availableStates = useMemo(() => {
+    const statesSet = new Set<string>();
+    markets.forEach((m) => {
+      if (m.state) statesSet.add(m.state);
+    });
+    return Array.from(statesSet).sort((a, b) => {
+      if (a === 'West Bengal') return -1;
+      if (b === 'West Bengal') return 1;
+      return a.localeCompare(b);
+    });
+  }, [markets]);
+
+  // Distinct districts filtered by selected state
+  const availableDistricts = useMemo(() => {
+    const distSet = new Set<string>();
+    markets.forEach((m) => {
+      if (selectedState === 'all' || m.state === selectedState) {
+        if (m.district) distSet.add(m.district);
+      }
+    });
+    return Array.from(distSet).sort((a, b) => {
+      if (a === 'Kolkata') return -1;
+      if (b === 'Kolkata') return 1;
+      return a.localeCompare(b);
+    });
+  }, [markets, selectedState]);
+
+  // Distinct localities filtered by selected state & district
+  const availableLocalities = useMemo(() => {
+    const locSet = new Set<string>();
+    markets.forEach((m) => {
+      const matchState = selectedState === 'all' || m.state === selectedState;
+      const matchDist = selectedDistrict === 'all' || m.district === selectedDistrict;
+      if (matchState && matchDist && m.locality) {
+        locSet.add(m.locality);
+      }
+    });
+    return Array.from(locSet).sort();
+  }, [markets, selectedState, selectedDistrict]);
+
+  // Markets filtered by state, district, locality
+  const filteredMarkets = useMemo(() => {
+    return markets.filter((m) => {
+      const matchState = selectedState === 'all' || m.state === selectedState;
+      const matchDist = selectedDistrict === 'all' || m.district === selectedDistrict;
+      const matchLoc = selectedLocality === 'all' || m.locality === selectedLocality;
+      return matchState && matchDist && matchLoc;
+    });
+  }, [markets, selectedState, selectedDistrict, selectedLocality]);
+
+  // Handle State change
+  const handleStateChange = (state: string) => {
+    setSelectedState(state);
+    setSelectedDistrict('all');
+    setSelectedLocality('all');
+    setSelectedMarketId('all');
+  };
+
+  // Handle District change
+  const handleDistrictChange = (district: string) => {
+    setSelectedDistrict(district);
+    setSelectedLocality('all');
+    setSelectedMarketId('all');
+  };
+
+  // Handle Locality change
+  const handleLocalityChange = (locality: string) => {
+    setSelectedLocality(locality);
+    setSelectedMarketId('all');
+  };
+
+  // Quick preset shortcuts
+  const applyQuickPreset = (state: string, district: string, marketId: string) => {
+    setSelectedState(state);
+    setSelectedDistrict(district);
+    setSelectedLocality('all');
+    setSelectedMarketId(marketId);
+  };
+
+  const clearGeoFilters = () => {
+    setSelectedState('all');
+    setSelectedDistrict('all');
+    setSelectedLocality('all');
+    setSelectedMarketId('all');
+  };
 
   // Filter crops for selector
   const filteredCrops = useMemo(() => {
@@ -62,31 +152,49 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
     });
   }, [crops, searchQuery, filterCategory]);
 
-  // Aggregate submissions for selected crop & market
+  // Selected market object if specific market is picked
+  const selectedMarket = useMemo(() => {
+    return markets.find((m) => m.id === selectedMarketId);
+  }, [markets, selectedMarketId]);
+
+  // Aggregate submissions for selected crop & cascading location
   const cropSubmissions = useMemo(() => {
     return submissions.filter((s) => {
       const matchCrop = s.cropId === selectedCropId;
-      const matchMarket = selectedMarketId === 'all' || s.marketId === selectedMarketId;
-      return matchCrop && matchMarket;
-    });
-  }, [submissions, selectedCropId, selectedMarketId]);
+      const mkt = markets.find((m) => m.id === s.marketId);
 
-  // Farmer price stats
+      const sState = s.state || mkt?.state;
+      const sDist = s.district || mkt?.district;
+      const sLoc = mkt?.locality;
+
+      const matchState = selectedState === 'all' || sState === selectedState;
+      const matchDist = selectedDistrict === 'all' || sDist === selectedDistrict;
+      const matchLoc = selectedLocality === 'all' || sLoc === selectedLocality;
+      const matchMarket = selectedMarketId === 'all' || s.marketId === selectedMarketId;
+
+      return matchCrop && matchState && matchDist && matchLoc && matchMarket;
+    });
+  }, [submissions, selectedCropId, selectedState, selectedDistrict, selectedLocality, selectedMarketId, markets]);
+
+  // Farmer price stats - benchmark against specific mandi modal summary if selected
+  const mktModal = selectedMarket?.modalPriceSummary?.[selectedCropId];
+  const baseFarmerRate = mktModal || selectedCrop.baseReferencePrice;
+
   const farmerPrices = cropSubmissions
     .filter((s) => s.transactionType === 'sell')
     .map((s) => s.normalizedPricePerKg);
   const farmerStats = calculateTrimmedStats(
-    farmerPrices.length > 0 ? farmerPrices : [selectedCrop.baseReferencePrice * 0.95, selectedCrop.baseReferencePrice, selectedCrop.baseReferencePrice * 1.05],
-    selectedCrop.baseReferencePrice
+    farmerPrices.length > 0 ? farmerPrices : [baseFarmerRate * 0.96, baseFarmerRate, baseFarmerRate * 1.04],
+    baseFarmerRate
   );
 
   // Consumer price stats
   const consumerPrices = cropSubmissions
     .filter((s) => s.transactionType === 'buy')
     .map((s) => s.normalizedPricePerKg);
-  const consumerBaseline = selectedCrop.baseReferencePrice * 1.45;
+  const consumerBaseline = Number((baseFarmerRate * 1.45).toFixed(2));
   const consumerStats = calculateTrimmedStats(
-    consumerPrices.length > 0 ? consumerPrices : [consumerBaseline * 0.95, consumerBaseline, consumerBaseline * 1.05],
+    consumerPrices.length > 0 ? consumerPrices : [consumerBaseline * 0.96, consumerBaseline, consumerBaseline * 1.04],
     consumerBaseline
   );
 
@@ -123,6 +231,12 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
     return points;
   }, [farmerStats.mean, consumerStats.mean]);
 
+  const hasActiveGeoFilters =
+    selectedState !== 'all' ||
+    selectedDistrict !== 'all' ||
+    selectedLocality !== 'all' ||
+    selectedMarketId !== 'all';
+
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Top Search & Filter Bar */}
@@ -150,19 +264,6 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
             <option value="oilseed">Oilseeds & Pulses</option>
           </select>
 
-          <select
-            value={selectedMarketId}
-            onChange={(e) => setSelectedMarketId(e.target.value)}
-            className="text-xs py-2 px-3 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200 focus:outline-none"
-          >
-            <option value="all">All Regional Mandis & APMCs</option>
-            {markets.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name} ({m.district})
-              </option>
-            ))}
-          </select>
-
           <button
             onClick={openSubmitModal}
             className="text-xs font-semibold px-4 py-2 bg-[#143828] hover:bg-[#1B543A] text-white rounded-lg shadow-xs transition-colors whitespace-nowrap"
@@ -170,6 +271,180 @@ export const CheckPrices: React.FC<CheckPricesProps> = ({
             + Report Market Rate
           </button>
         </div>
+      </div>
+
+      {/* Cascading State -> District -> Locality -> Mandi Filter Bar */}
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-4 sm:p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-3.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-100 dark:border-stone-800/80 pb-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-stone-900 dark:text-white uppercase tracking-wider">
+              <MapPin className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              State → District → Locality → Mandi Filter
+            </span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+              Official APMC & e-NAM Verified Benchmarks
+            </span>
+          </div>
+
+          {/* Quick Presets for West Bengal / Kolkata */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] text-stone-400 font-medium">Quick Presets:</span>
+            <button
+              onClick={() => applyQuickPreset('West Bengal', 'Kolkata', 'mkt_kol_sealdah')}
+              className={`px-2 py-1 rounded-md text-[11px] font-medium border transition-colors ${
+                selectedMarketId === 'mkt_kol_sealdah'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 text-emerald-700 dark:text-emerald-300 font-bold'
+                  : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100'
+              }`}
+            >
+              Kolkata: Sealdah
+            </button>
+            <button
+              onClick={() => applyQuickPreset('West Bengal', 'Kolkata', 'mkt_kol_posta')}
+              className={`px-2 py-1 rounded-md text-[11px] font-medium border transition-colors ${
+                selectedMarketId === 'mkt_kol_posta'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 text-emerald-700 dark:text-emerald-300 font-bold'
+                  : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100'
+              }`}
+            >
+              Kolkata: Posta
+            </button>
+            <button
+              onClick={() => applyQuickPreset('West Bengal', 'Hooghly', 'mkt_singur')}
+              className={`px-2 py-1 rounded-md text-[11px] font-medium border transition-colors ${
+                selectedMarketId === 'mkt_singur'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 text-emerald-700 dark:text-emerald-300 font-bold'
+                  : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100'
+              }`}
+            >
+              Hooghly: Singur
+            </button>
+            {hasActiveGeoFilters && (
+              <button
+                onClick={clearGeoFilters}
+                className="px-2 py-1 rounded-md text-[11px] font-medium text-rose-600 dark:text-rose-400 hover:underline"
+              >
+                Reset All
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* The 4 Synchronized Cascading Selectors */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+          {/* 1. State Selector */}
+          <div className="space-y-1">
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 block">
+              1. State / UT
+            </label>
+            <select
+              value={selectedState}
+              onChange={(e) => handleStateChange(e.target.value)}
+              className="w-full text-xs py-2 px-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+            >
+              <option value="all">All States & UTs (All India)</option>
+              {availableStates.map((st) => (
+                <option key={st} value={st}>
+                  {st} {st === 'West Bengal' ? '★' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 2. District Selector */}
+          <div className="space-y-1">
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 block">
+              2. District
+            </label>
+            <select
+              value={selectedDistrict}
+              onChange={(e) => handleDistrictChange(e.target.value)}
+              className="w-full text-xs py-2 px-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+            >
+              <option value="all">
+                {selectedState !== 'all' ? `All Districts in ${selectedState}` : 'All Districts'}
+              </option>
+              {availableDistricts.map((dst) => (
+                <option key={dst} value={dst}>
+                  {dst} {dst === 'Kolkata' ? '★ (Capital Metro)' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 3. Locality Selector */}
+          <div className="space-y-1">
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 block">
+              3. Sub-Locality / Yard
+            </label>
+            <select
+              value={selectedLocality}
+              onChange={(e) => handleLocalityChange(e.target.value)}
+              className="w-full text-xs py-2 px-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+            >
+              <option value="all">
+                {selectedDistrict !== 'all' ? `All Localities in ${selectedDistrict}` : 'All Localities'}
+              </option>
+              {availableLocalities.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 4. Mandi / APMC Yard Selector */}
+          <div className="space-y-1">
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 block">
+              4. Specific Mandi / Terminal
+            </label>
+            <select
+              value={selectedMarketId}
+              onChange={(e) => setSelectedMarketId(e.target.value)}
+              className="w-full text-xs py-2 px-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+            >
+              <option value="all">
+                {filteredMarkets.length > 0 ? `All Matching Mandis (${filteredMarkets.length})` : 'All Mandis'}
+              </option>
+              {filteredMarkets.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name} ({m.locality || m.district})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Active Filter Breadcrumb */}
+        {hasActiveGeoFilters && (
+          <div className="flex items-center justify-between text-[11px] text-stone-600 dark:text-stone-400 bg-stone-50 dark:bg-stone-800/40 px-3 py-1.5 rounded-lg font-mono">
+            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+              <span className="text-stone-400">Filtering:</span>
+              <span>India</span>
+              <span>&gt;</span>
+              <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                {selectedState !== 'all' ? selectedState : 'All States'}
+              </span>
+              <span>&gt;</span>
+              <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                {selectedDistrict !== 'all' ? selectedDistrict : 'All Districts'}
+              </span>
+              <span>&gt;</span>
+              <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                {selectedLocality !== 'all' ? selectedLocality : 'All Localities'}
+              </span>
+              <span>&gt;</span>
+              <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                {selectedMarket ? selectedMarket.name : 'All Regional Mandis'}
+              </span>
+            </div>
+            {selectedMarket && (
+              <span className="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">
+                {selectedMarket.type.toUpperCase()} Yard
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Commodity Selector Segmented Bar */}

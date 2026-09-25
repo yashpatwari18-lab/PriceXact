@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { storage } from '../../services/storageService';
 import { calculateTrimmedStats } from '../../services/calculationEngine';
@@ -19,6 +19,11 @@ import {
   CheckCircle,
   CreditCard,
   FileText,
+  MapPin,
+  Navigation,
+  AlertTriangle,
+  CheckCircle2,
+  ShieldAlert,
 } from 'lucide-react';
 
 interface FarmerDashboardProps {
@@ -43,6 +48,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
   const submissions = storage.getState().submissions;
   const weather = storage.getState().weather;
   const userSubmissions = submissions.filter((s) => s.submitterId === currentUser.id);
+  const [telemetryMode, setTelemetryMode] = useState<'matched' | 'urban_kolkata' | 'verified_trip'>('matched');
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8">
@@ -101,9 +107,9 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
               </span>
             </div>
             <div className="text-xs text-stone-500 dark:text-stone-400 flex flex-wrap items-center gap-3 mt-1 font-mono">
-              <span>KCC Number: <strong className="text-stone-800 dark:text-stone-200">{currentUser.kccId || 'KCC-UP-98234-MEE'}</strong></span>
+              <span>KCC Number: <strong className="text-stone-800 dark:text-stone-200">{currentUser.kccId || 'KCC-WB-BARD-2024-4109'}</strong></span>
               <span>·</span>
-              <span>Khatian / RoR: <strong className="text-stone-800 dark:text-stone-200">{currentUser.khatianNumber || 'KHAT-742-MEERUT'}</strong></span>
+              <span>Khatian / RoR: <strong className="text-stone-800 dark:text-stone-200">{currentUser.khatianNumber || 'KH-142/RAINA-P7'}</strong></span>
             </div>
           </div>
         </div>
@@ -114,6 +120,133 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
         >
           Update KCC / Khatian
         </button>
+      </div>
+
+      {/* Location-Based Farmer Verification & Telemetry Risk Card */}
+      <div className="bg-white dark:bg-[#141A17] rounded-2xl p-5 border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 dark:border-stone-800/80 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${
+              telemetryMode === 'urban_kolkata'
+                ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800'
+                : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'
+            }`}>
+              <MapPin className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-bold text-stone-900 dark:text-white text-sm">
+                  Location Verification & Telemetry Review
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                  Geo-Fence Telemetry Active
+                </span>
+              </div>
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                Continuous geo-fencing comparison between registered agricultural farm land and live physical login telemetry.
+              </p>
+            </div>
+          </div>
+
+          {/* Interactive Simulation Switcher for College Presentation */}
+          <div className="flex items-center gap-1.5 self-start sm:self-auto bg-stone-100 dark:bg-stone-800 p-1 rounded-xl">
+            <span className="text-[10px] text-stone-500 font-semibold px-1 hidden sm:inline">Simulate:</span>
+            <button
+              onClick={() => setTelemetryMode('matched')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                telemetryMode === 'matched'
+                  ? 'bg-white dark:bg-stone-900 text-emerald-700 dark:text-emerald-400 shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+              }`}
+            >
+              Farmgate Match
+            </button>
+            <button
+              onClick={() => setTelemetryMode('urban_kolkata')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                telemetryMode === 'urban_kolkata'
+                  ? 'bg-amber-500 text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+              }`}
+            >
+              Urban Flag (Kolkata)
+            </button>
+            <button
+              onClick={() => setTelemetryMode('verified_trip')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                telemetryMode === 'verified_trip'
+                  ? 'bg-emerald-600 text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+              }`}
+            >
+              Mandi Trip Verified
+            </button>
+          </div>
+        </div>
+
+        {/* Telemetry Status Details */}
+        {telemetryMode === 'matched' && (
+          <div className="p-3.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 flex items-start gap-3 text-xs">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-semibold text-emerald-900 dark:text-emerald-300">
+                Farmgate Telemetry Match Confirmed (Tier-1 Algorithmic Weight)
+              </span>
+              <p className="text-emerald-800/80 dark:text-emerald-400/80 text-[11px]">
+                Your login coordinates match your registered agricultural land perimeter in {currentUser.location.villageOrTown}, {currentUser.location.district}. Prices submitted carry full farmgate validation weight.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {telemetryMode === 'urban_kolkata' && (
+          <div className="space-y-3">
+            <div className="p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800 flex items-start gap-3 text-xs">
+              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <span className="font-bold text-amber-900 dark:text-amber-200">
+                  Status: Flagged for Location Verification Review (Urban Login Telemetry)
+                </span>
+                <p className="text-amber-800 dark:text-amber-300 text-[11px] leading-relaxed">
+                  Current telemetry detected near <strong>Central Kolkata (Burrabazar / Sealdah, West Bengal)</strong>, approximately <strong>114 km</strong> from your registered agricultural acreage in Purba Bardhaman.
+                </p>
+                <div className="mt-2 p-2.5 rounded-lg bg-white/70 dark:bg-stone-900/60 border border-amber-200 dark:border-amber-800/60 text-[11px] text-stone-700 dark:text-stone-300 leading-normal">
+                  <strong className="text-stone-900 dark:text-white">Fair Platform Policy:</strong> You are <strong>not automatically classified as a middleman</strong>. Farmers frequently visit metropolitan hubs for APMC wholesale delivery auctions or purchasing inputs. You are flagged for standard location verification so your submitted rates can be authenticated via your transport gate pass.
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => setTelemetryMode('verified_trip')}
+                className="px-3.5 py-1.5 rounded-lg bg-[#143828] text-white text-xs font-semibold hover:bg-[#1B543A] transition-colors flex items-center gap-1.5"
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                <span>Upload Mandi Delivery Pass / Confirm Produce Transport</span>
+              </button>
+              <button
+                onClick={() => setTelemetryMode('matched')}
+                className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 text-xs font-medium hover:bg-stone-50"
+              >
+                Reset to Farmgate
+              </button>
+            </div>
+          </div>
+        )}
+
+        {telemetryMode === 'verified_trip' && (
+          <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800/40 flex items-start gap-3 text-xs">
+            <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-semibold text-blue-900 dark:text-blue-300">
+                Verified Mandi Wholesale Delivery Run (Kolkata APMC Pass Validated)
+              </span>
+              <p className="text-blue-800/80 dark:text-blue-400/80 text-[11px]">
+                Your presence in Central Kolkata is authenticated as an authorized produce delivery trip to Sealdah Koley Market. Full producer pricing status maintained with +15 reputation bonus.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Quick Action Ribbon */}
@@ -231,7 +364,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
                 </div>
 
                 <div className="mt-3 flex items-center justify-between text-[11px] text-stone-400 pt-2 border-t border-stone-50 dark:border-stone-800/60">
-                  <span>Mandi: Azadpur & Meerut</span>
+                  <span>Mandi: Sealdah & Koley Market</span>
                   <span className="font-mono tabular-nums">σ: ±₹{stats.stdDev}</span>
                 </div>
               </div>

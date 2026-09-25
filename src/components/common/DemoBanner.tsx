@@ -9,10 +9,10 @@ export const DemoBanner: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const personas: { role: UserRole; name: string; title: string; location: string; initial: string; badge?: string }[] = [
-    { role: 'farmer', name: 'Rameshwar Singh Patel', title: 'Agricultural Producer', location: 'Meerut Mandi (KCC Verified)', initial: 'RP', badge: 'KCC Verified' },
-    { role: 'consumer', name: 'Priya Mukherjee', title: 'Direct Consumer', location: 'South Delhi Urban Hub', initial: 'PM' },
-    { role: 'trader', name: 'Gupta Agro Trading Corp', title: 'Licensed APMC Trader', location: 'Azadpur Mandi Yard #4', initial: 'GA', badge: 'Licensed' },
-    { role: 'expert', name: 'Dr. Virendra K. Sharma', title: 'Senior Agronomist', location: 'ICAR Research Fellow', initial: 'VS', badge: 'ICAR' },
+    { role: 'farmer', name: 'Subhash Chandra Mondal', title: 'Agricultural Producer', location: 'Purba Bardhaman / Sealdah (KCC Verified)', initial: 'SM', badge: 'KCC Verified' },
+    { role: 'consumer', name: 'Priya Mukherjee', title: 'Direct Consumer', location: 'Kolkata Urban Hub (Gariahat)', initial: 'PM' },
+    { role: 'trader', name: 'Bengal Agro Commodities Corp', title: 'Licensed APMC Trader', location: 'Sealdah Koley Market Yard #2', initial: 'BA', badge: 'Licensed' },
+    { role: 'expert', name: 'Dr. Virendra K. Sharma', title: 'Senior Agronomist', location: 'ICAR / BCKV Agri Research Fellow', initial: 'VS', badge: 'ICAR' },
     { role: 'admin', name: 'PriceXact Intelligence Hub', title: 'Market Operations Lead', location: 'National Data Clearinghouse', initial: 'PX', badge: 'Admin' },
   ];
 
@@ -40,7 +40,7 @@ export const DemoBanner: React.FC = () => {
           </span>
           <span className="text-stone-700 hidden md:inline">·</span>
           <span className="text-stone-400 hidden md:inline">
-            Active Mandis: Azadpur, Meerut, Lasalgaon, Vashi
+            Active Mandis: Sealdah, Posta, Mechua, Howrah, Siliguri, Azadpur, Lasalgaon
           </span>
         </div>
 

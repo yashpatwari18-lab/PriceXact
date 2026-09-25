@@ -15,6 +15,10 @@ import {
   Trash2,
 } from 'lucide-react';
 
+import { INITIAL_VERIFICATION_QUEUE } from '../../services/locationAndRiskService';
+import { LocationVerificationQueueItem } from '../../types';
+import { MapPin, Navigation } from 'lucide-react';
+
 export const AdminDashboard: React.FC = () => {
   const { refreshUserState } = useAuth();
   const users = storage.getState().users;
@@ -22,7 +26,8 @@ export const AdminDashboard: React.FC = () => {
   const moderationReports = storage.getState().moderationReports;
   const markets = storage.getState().markets;
 
-  const [activeTab, setActiveTab] = useState<'moderation' | 'verification' | 'submissions' | 'users'>('moderation');
+  const [activeTab, setActiveTab] = useState<'moderation' | 'verification' | 'location' | 'submissions' | 'users'>('moderation');
+  const [locationQueue, setLocationQueue] = useState<LocationVerificationQueueItem[]>(INITIAL_VERIFICATION_QUEUE);
 
   const pendingReports = moderationReports.filter((r) => r.status === 'pending');
   const pendingFarmers = users.filter((u) => u.role === 'farmer' && u.verificationStatus === 'temporary');
@@ -30,6 +35,20 @@ export const AdminDashboard: React.FC = () => {
   const handleResolveReport = (reportId: string, action: 'dismiss' | 'warn' | 'remove_submission' | 'penalize') => {
     storage.resolveModerationReport(reportId, action);
     refreshUserState();
+  };
+
+  const handleVerifyLocationAction = (queueId: string, action: 'approve' | 'request_pass' | 'dismiss') => {
+    setLocationQueue((prev) =>
+      prev.map((item) => {
+        if (item.id === queueId) {
+          return {
+            ...item,
+            status: action === 'approve' ? 'verified' : action === 'request_pass' ? 'manual_review' : 'dismissed',
+          };
+        }
+        return item;
+      })
+    );
   };
 
   const handleVerifyFarmer = (userId: string) => {
@@ -129,6 +148,17 @@ export const AdminDashboard: React.FC = () => {
           }`}
         >
           🌾 KCC Farmer Verifications ({pendingFarmers.length})
+        </button>
+
+        <button
+          onClick={() => setActiveTab('location')}
+          className={`py-2 px-4 rounded-xl transition-all ${
+            activeTab === 'location'
+              ? 'bg-amber-600 text-white shadow-xs'
+              : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+          }`}
+        >
+          📍 Location Risk & Telemetry ({locationQueue.length})
         </button>
 
         <button
@@ -271,6 +301,151 @@ export const AdminDashboard: React.FC = () => {
                     <CheckCircle className="w-4 h-4" />
                     <span>Approve & Grant Verified Badge (+20 pts)</span>
                   </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab: Location Risk & Telemetry Queue */}
+      {activeTab === 'location' && (
+        <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-200 dark:border-stone-800 shadow-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 dark:border-stone-800 pb-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-bold text-stone-900 dark:text-white text-base flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-amber-500" />
+                  Farmer Location Risk & Urban Telemetry Verification Queue
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                  Geo-Fence Audit System
+                </span>
+              </div>
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                Audit producers whose current physical login telemetry deviates from registered farm acreage coordinates.
+              </p>
+            </div>
+            <span className="text-xs font-semibold px-3 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+              {locationQueue.filter((q) => q.status === 'pending').length} Pending Location Audits
+            </span>
+          </div>
+
+          {/* Mandatory College Specification Rule Notice */}
+          <div className="p-4 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 flex items-start gap-3 text-xs text-amber-900 dark:text-amber-200">
+            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <strong className="font-semibold block">
+                PriceXact Core Integrity Rule: Urban Telemetry ≠ Middleman
+              </strong>
+              <p className="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">
+                A farmer logging in from an urban commercial hub (e.g., Central Kolkata) is <strong>never automatically classified as an unauthorized middleman</strong>. Farmers regularly travel to urban terminal mandis (like Sealdah or Posta) with truckloads of produce or to acquire farm supplies. The algorithm flags them for <strong>verification review</strong> to cross-reference their KCC land record with physical APMC transport slips.
+              </p>
+            </div>
+          </div>
+
+          {locationQueue.length === 0 ? (
+            <div className="p-8 text-center text-xs text-stone-400">
+              No location discrepancies detected. All active telemetry matches registered farm locations.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {locationQueue.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-5 bg-stone-50 dark:bg-stone-800/60 rounded-2xl border border-stone-200 dark:border-stone-700 space-y-4 text-xs"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-bold text-stone-900 dark:text-white text-sm">
+                          {item.userName}
+                        </h3>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase ${
+                          item.status === 'verified'
+                            ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300'
+                            : item.status === 'manual_review'
+                            ? 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300'
+                            : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
+                        }`}>
+                          {item.status === 'verified'
+                            ? '✓ Verified Farmgate/Mandi Trip'
+                            : item.status === 'manual_review'
+                            ? 'Gate Pass Requested'
+                            : 'Flagged for Location Verification'}
+                        </span>
+                      </div>
+                      <p className="text-stone-600 dark:text-stone-300 text-[11px] leading-relaxed">
+                        {item.riskReason}
+                      </p>
+                    </div>
+
+                    <div className="text-right sm:text-right text-stone-500 font-mono text-[11px] shrink-0">
+                      <span>Telemetry Gap: </span>
+                      <strong className="text-rose-600 dark:text-rose-400 font-bold">{item.distanceKm} km</strong>
+                    </div>
+                  </div>
+
+                  {/* Discrepancy Matrix */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white dark:bg-stone-900 p-3 rounded-xl border border-stone-200/80 dark:border-stone-800 text-[11px]">
+                    <div className="space-y-1">
+                      <span className="text-stone-400 font-semibold block uppercase text-[9px]">
+                        Registered Agricultural Land
+                      </span>
+                      <div className="text-stone-800 dark:text-stone-200 font-medium">
+                        {item.declaredVillage}, {item.declaredDistrict}, {item.declaredState}
+                      </div>
+                      <div className="text-stone-500 font-mono text-[10px]">
+                        KCC: {item.kccNumber} · Khatian: {item.khatianNumber}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1 border-t sm:border-t-0 sm:border-l border-stone-100 dark:border-stone-800 sm:pl-3 pt-2 sm:pt-0">
+                      <span className="text-amber-500 font-semibold block uppercase text-[9px]">
+                        Active Detected Login Telemetry
+                      </span>
+                      <div className="text-stone-800 dark:text-stone-200 font-medium">
+                        {item.detectedRegion || `${item.detectedLocality || item.detectedDistrict}, ${item.detectedState}`}
+                      </div>
+                      <div className="text-stone-500 font-mono text-[10px]">
+                        Audit Timestamp: {new Date(item.flaggedAt).toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Admin Resolution Buttons */}
+                  <div className="flex items-center gap-2 flex-wrap pt-1">
+                    <button
+                      onClick={() => handleVerifyLocationAction(item.id, 'approve')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+                        item.status === 'verified'
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 border border-emerald-300 dark:border-emerald-800'
+                      }`}
+                    >
+                      <CheckCircle className="w-3.5 h-3.5" />
+                      <span>Approve Mandi Transport Trip (+15 pts)</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleVerifyLocationAction(item.id, 'request_pass')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+                        item.status === 'manual_review'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-stone-100 dark:bg-stone-700 text-stone-700 dark:text-stone-200 hover:bg-stone-200 border border-stone-300 dark:border-stone-600'
+                      }`}
+                    >
+                      <Navigation className="w-3.5 h-3.5" />
+                      <span>Request Mandi Gate Pass / Challan</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleVerifyLocationAction(item.id, 'dismiss')}
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                    >
+                      Dismiss Review
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
